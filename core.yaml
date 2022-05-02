@@ -1,0 +1,166 @@
+userLevels:
+  - 
+    battles: 5
+    winScraps: 3
+    winBalance: 10
+    loseBalance: 5
+  - 
+    battles: 6
+    winScraps: 3
+    winBalance: 10
+    loseBalance: 10
+  - 
+    battles: 7
+    winScraps: 3
+    winBalance: 15
+    loseBalance: 10
+  - 
+    battles: 7
+    winScraps: 3
+    winBalance: 15
+    loseBalance: 10
+  - 
+    battles: 32767
+    winScraps: 5000
+    winBalance: 10000
+    loseBalance: 10000
+  - 
+    battles: 7
+    winScraps: 3
+    winBalance: 15
+    loseBalance: 10
+
+commands:
+  win:
+    permittedIn:
+      - chat
+    activateOn:
+      - ПОБЕДА
+  lose:
+    permittedIn:
+      - chat
+    activateOn:
+      - ПОРАЖЕНИЕ
+  judge:
+    permittedIn:
+      - chat
+    activateOn:
+      - СУДЬЯ
+  flip:
+    permittedIn:
+      - chat
+    activateOn:
+      - ФЛИП
+  upgrade:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - АП
+      - АПГРЕЙД
+  profile:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - П
+      - ПРОФ
+      - ПРОФИЛЬ
+  showCards:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - КАРТА
+      - К
+  tutorial:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - ОБУЧЕНИЕ
+      - О
+  shop:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - МАГАЗИН
+      - М
+  give:
+    permittedIn:
+      - chat
+      - admins
+    activateOn:
+      - ДАТЬ
+  remove:
+    permittedIn:
+      - chat
+      - admins
+    activateOn:
+      - СНЯТЬ
+      - УБРАТЬ
+
+
+
+subOptions:
+  rarity:
+    activateOn:
+      - Р
+      - РЕД
+      - РЕДКОСТЬ
+  level:
+    activateOn:
+      - УР
+      - УРОВЕНЬ
+  repeats:
+    activateOn:
+      - ПОВТОРКИ
+      - ПОВТ
+
+  
+commandCall:
+  - '.'
+  - '/'
+  - '#'
+  - '!'
+
+notPermittedHere: >
+  Здесь нельзя использовать эту комманду
+
+notPermittedAdmin: >
+  Только админы могут использовать эту комманду
+
+packSettings:
+  - 
+    price: 100
+    rarities:
+      '2': 15
+  - 
+    price: 150
+    rarities:
+      '2': 85
+      '3': 10
+  - 
+    price: 200
+    rarities:
+      '3': 92
+      '4': 8
+  - 
+    price: 200
+    rarities:
+      '0'
+
+scrapCosts:
+  - 25
+  - 30
+  - 35
+  - 40
+
+repeatsNeeded:
+  - 3
+  - 3
+  - 2
+  - 2
+
+maxLevel: 2

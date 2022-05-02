@@ -129,5 +129,6 @@ dmypy.json
 .pyre/
 
 
-# Yaml configs contain confidential data
-*.yaml
+# These Yaml configs contain confidential data
+db.yaml
+vk.yaml

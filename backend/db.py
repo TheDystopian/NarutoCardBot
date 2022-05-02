@@ -17,7 +17,7 @@ class DB:
             port=config["port"]
         )
         self.__DBCursor=self.__DB.cursor()
-        self.__DBColumns=[row[0].decode('utf-8') for row in self.__DBCursor.execute("select column_name from information_schema.columns where table_name = 'userdata'")]
+        self.__DBColumns=[row[0] for row in self.__DBCursor.execute("select column_name from information_schema.columns where table_name = 'userdata'")]
 
 
     def __composeDictionary(self,keys,data):

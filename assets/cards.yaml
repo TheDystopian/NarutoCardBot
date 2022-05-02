@@ -1,0 +1,435 @@
+defaultProbs: 
+  '4': 2
+  '3': 5
+  '2': 10
+cards:
+-
+  name: Какаши Хатаке
+  rarity: 4
+  photo:
+    lvl1: 
+      - photo-195428368_457240351_a23fb8d425d8bb759d
+    lvl2: 
+      - photo-195428368_457240403_958707f1cfb11c7028      
+-
+  name: Наруто Узумаки
+  rarity: 4
+  photo:
+    lvl1: 
+      - photo-195428368_457240352_1418a0d3236706eb9a
+    lvl2:
+      - photo-195428368_457240404_2e8514f7d7cf4ecfcc
+      - photo-195428368_457240405_d512356f46a8b97acd
+      - photo-195428368_457240406_276e3843834ef86501
+-
+  name: Обито Учиха
+  rarity: 4
+  photo:
+    lvl1: 
+      - photo-195428368_457240353_1ffa9e85904f6d90be
+    lvl2: 
+      - photo-195428368_457240407_51c3183701a6887a35
+-
+  name: Саске Учиха
+  rarity: 4
+  photo:
+    lvl1: 
+      - photo-195428368_457240354_9e713b15ab91816347
+    lvl2:
+      - photo-195428368_457240408_434809c7a014bba6ae
+      - photo-195428368_457240409_d204ff58f26b70f1af
+      - photo-195428368_457240410_84f347b09a24534e3d
+
+-
+  name: Анко
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240355_30f20aef17205a1063
+    lvl2: 
+      - photo-195428368_457240411_c788e1d5bd2af5780a
+-
+  name: Генма
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240356_7cdedfc3914ceb56db
+    lvl2: 
+      - photo-195428368_457240412_a7761377c878f1102a
+-
+  name: Гозу
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240357_2fb5e6aca1cabeef9f
+    lvl2: 
+      - photo-195428368_457240413_bb02ff2a81febee575
+-
+  name: Джиробо
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240358_5143672ec8dcbb2e08
+    lvl2: 
+      - photo-195428368_457240414_a0dcbfd087916177ab
+-
+  name: Досу
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240359_07f9daec52d9f95662
+    lvl2: 
+      - photo-195428368_457240415_8412de6103fb23b18c
+-
+  name: Заку
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240360_c1f8832171e53efa61
+    lvl2: 
+      - photo-195428368_457240416_305386eff0df004b9b
+-
+  name: Камизуки
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240361_5b2c8e8b99c7f82707
+    lvl2: 
+      - photo-195428368_457240417_3331f2f4cc7ce19b2d
+-
+  name: Карин Узумаки
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240362_8bfba59a3d0bb44f94
+    lvl2: 
+      - photo-195428368_457240418_36f01369cf3bc42850
+-
+  name: Киба Инузука
+  pool: 1
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240363_283fd2b7cb06822b9b
+    lvl2: 
+      - photo-195428368_457240419_661ea38edb0b284edc
+-
+  name: Кидомару
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240364_f31b99e89914606b48
+    lvl2: 
+      - photo-195428368_457240420_05ccf767e9abe4f16f
+-
+  name: Кин
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240365_577ff4e43a8a6fe432
+    lvl2: 
+      - photo-195428368_457240421_0af307663d76a0c466
+-
+  name: Котетсу
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240366_65a2901419663aa539
+    lvl2: 
+      - photo-195428368_457240422_c734b71ca70c3fedd7
+-
+  name: Мейзу
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240367_f7b34aa91fce61837a
+    lvl2: 
+      - photo-195428368_457240423_50a8d5483e4e4f97aa
+-
+  name: Мизуки
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240368_ed87f5f26cb7248e76
+    lvl2: 
+      - photo-195428368_457240424_1533ceb683fe11d29d
+-
+  name: Моэги
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240369_4c45f4e12a25ce210d
+    lvl2: 
+      - photo-195428368_457240425_1872d39f812bb1e394
+-
+  name: Омои
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240370_3c783e96b6f3ec14bc
+    lvl2: 
+      -  photo-195428368_457240426_93673b3d45642a6a6c
+-
+  name: Самуи
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240371_989c1930a17a8b7e08
+    lvl2: 
+      - photo-195428368_457240427_185c604e58b716b82a
+-
+  name: Сузумебачи
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240372_6c099dc25c11af0676
+    lvl2: 
+      - photo-195428368_457240428_3bc022c91f28966938
+-
+  name: Таюя
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240373_3cd776fd95341a256f
+    lvl2: 
+      - photo-195428368_457240429_d16cb72923f8b8d68f
+-
+  name: Темари
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240374_97c33fb77c491b38ff
+    lvl2: 
+      - photo-195428368_457240430_ee9e48094df3cc748f
+-
+  name: Тен Тен
+  pool: 1
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240375_9dddf7c28835e67a82
+    lvl2: 
+      - photo-195428368_457240431_2cd5810aaac4c33913
+-
+  name: Удон
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240376_ab23daf1acca951084
+    lvl2: 
+      - photo-195428368_457240432_b4e4f0c02dd8d02f7f
+-
+  name: Чоджи Акимичи
+  pool: 3
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240377_63486d63366699b123
+    lvl2: 
+      - photo-195428368_457240433_564fbe8c4e15a17905
+-
+  name: Чоза Акимичи
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240378_7974e1d2efd5a8a77c
+    lvl2: 
+      - photo-195428368_457240434_f7c83056bbc4d77b5f
+-
+  name: Шизуне
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240379_3b18fd47e9b1f0939a
+    lvl2: 
+      - photo-195428368_457240435_e143a2c74bee38e531
+-
+  name: Шино Абураме
+  pool: 3
+  rarity: 1
+  photo:
+    lvl1: 
+      - photo-195428368_457240380_8a73d7461771ee7be7
+    lvl2: 
+      - photo-195428368_457240436_bb66fae313a7048e10
+-
+  name: Ао
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240381_9e5e29dd54c1301739
+    lvl2: 
+      - photo-195428368_457240437_4f59d4668437bee573
+-
+  name: Джуго
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240382_01cc59397d8ceefe73
+    lvl2: 
+      - photo-195428368_457240438_01edf55649932d5816
+-
+  name: Джузо Бива
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240383_44fca8de798835800b
+    lvl2: 
+      - photo-195428368_457240439_edcee1e4d12319dae3
+-
+  name: Ино Яманака
+  pool: 2
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240384_9b313b7f0a50d002a4
+    lvl2: 
+      - photo-195428368_457240440_a3608558f6869e0556
+-
+  name: Иноичи Яманака
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240385_1983b6bb440f98e547
+    lvl2: 
+      - photo-195428368_457240441_9be31229e4e323af25
+-
+  name: Ирука
+  rarity: 2
+  photo:
+    lvl1:
+      - photo-195428368_457240386_5ebc0987aa37b7abcd
+    lvl2: 
+      - photo-195428368_457240442_4209517a75ca8bb285
+-
+  name: Канкуро
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240387_a39b95be94cb9152b9
+    lvl2: 
+      - photo-195428368_457240443_dec14609ac74022caa
+-
+  name: Юхи Куренай
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240388_e7aa62cdf92de19521
+    lvl2: 
+      - photo-195428368_457240444_e97210c3b6358da2b1
+-
+  name: Мифуне
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240389_7c6dbb996868656cfe
+    lvl2: 
+      - photo-195428368_457240446_3638435c611bb81637
+-
+  name: Рок Ли
+  pool: 2
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240390_d642711fbb90f30bfc
+    lvl2: 
+      -  photo-195428368_457240445_0ac9b668b737e5be73
+-
+  name: Рьюзетсу
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240391_7d2d65a7edd4cbe919
+    lvl2: 
+      - photo-195428368_457240447_00034b5c1dbb9f0364
+-
+  name: Суйгецу
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240392_dcf6d9a83483e42e9a
+    lvl2: 
+      - photo-195428368_457240448_26a0f9d25fbc1ceac6
+-
+  name: Ханзо Саламандра
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240393_251abfc8608f08fb85
+    lvl2: 
+      - photo-195428368_457240449_36695abf0e22452d57
+-
+  name: Хината Хьюга
+  pool: 1
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240394_e6fdc361a97bf9774f
+    lvl2: 
+      - photo-195428368_457240450_df29cb882917d68021
+-
+  name: Шиби Абураме
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240395_b0758d1e96641c9119
+    lvl2: 
+      - photo-195428368_457240451_89f21b33f106df274a
+-
+  name: Шикамару Нара
+  pool: 2
+  rarity: 2
+  photo:
+    lvl1: 
+      - photo-195428368_457240396_2cfa5665e14f26800e
+    lvl2: 
+      - photo-195428368_457240452_a13f5ee9f52b135ea3
+-
+  name: Гаара
+  rarity: 3
+  photo:
+    lvl1: 
+      - photo-195428368_457240397_7663333fa1f2afafcb
+    lvl2: 
+      - photo-195428368_457240453_2fd03455f93c68df2b
+-
+  name: Джирайа
+  rarity: 3
+  photo:
+    lvl1: 
+      - photo-195428368_457240398_672c072ec1b9befafd
+    lvl2: 
+      - photo-195428368_457240454_e05eebb38573e0e199
+-
+  name: Нейджи Хьюга
+  rarity: 3
+  photo:
+    lvl1: 
+      - photo-195428368_457240399_423e989ed911d4343e
+    lvl2: 
+      - photo-195428368_457240455_8620f2035a0aac5430
+-
+  name: Сакон
+  rarity: 3
+  photo:
+    lvl1: 
+      - photo-195428368_457240400_7f5ffc4635370d101a
+    lvl2: 
+      - photo-195428368_457240456_ae4591ef86bba6e5a3
+-
+  name: Сакура Харуне
+  pool: 3
+  rarity: 3
+  photo:
+    lvl1: 
+      - photo-195428368_457240401_de3f12f42960067462
+    lvl2: 
+      - photo-195428368_457240457_c9b8f6710bfd668c4e
+-
+  name: Ямато
+  rarity: 3
+  photo:
+    lvl1: 
+      - photo-195428368_457240402_183ddb69b9befed946
+    lvl2: 
+      - photo-195428368_457240458_11ea68d2635d570fec

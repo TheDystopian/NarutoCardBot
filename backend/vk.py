@@ -16,27 +16,23 @@ class VK:
 
 
     def send(self, sendable = None, attachments = None):
-        '''
-        Send dictionary
-        attachment - photo
 
-        '''
         if attachments is not None:
             for atch in attachments:
-                self.__vk_session.method('messages.send', {'attachment': atch,'user_id': sendable['id'] if 'id' in sendable else None, 'random_id': get_random_id(), 'peer_id': sendable['peer_id'] if 'peer_id' in sendable else None})
+                self.__vk_session.method('messages.send', {'attachment': atch,'user_id': sendable.get('id'), 'random_id': get_random_id(), 'peer_id': sendable.get('peer_id'), 'message': sendable.get('message')})
 
         else:
             if not isinstance(sendable['message'],list):
                 sendable['message'] = [sendable['message']]
 
             for msg in sendable['message']:
-                self.__vk_session.method('messages.send', {'message': msg, 'user_id': sendable['id'] if 'id' in sendable else None, 'random_id': get_random_id(), 'keyboard': sendable['keyboard'] if 'keyboard' in sendable else None, 'peer_id': sendable['peer_id'] if 'peer_id' in sendable else None})
+                self.__vk_session.method('messages.send', {'message': msg, 'user_id': sendable.get('id'), 'random_id': get_random_id(), 'keyboard': sendable.get('keyboard'), 'peer_id': sendable.get('peer_id')})
        
     def wait(self):
         # Получить события от бота
         for event in self.__LP.listen():
             if event.type == bot_longpoll.VkBotEventType.MESSAGE_NEW:
-                yield {'user': event.message.from_id, 'payload':loads(event.message.payload) if event.message.payload is not None else None, 'text':event.message.text, 'peer_id': event.message.peer_id}
+                yield {'user': event.message.from_id, 'payload':loads(event.message.payload) if event.message.payload is not None else None, 'text':event.message.text, 'peer_id': event.message.peer_id, 'reply_id': event.message.get('reply_message',{}).get('from_id')}
             
             if event.type == bot_longpoll.VkBotEventType.MESSAGE_EVENT:
                 self.__vk.messages.sendMessageEventAnswer(
@@ -50,3 +46,6 @@ class VK:
     def sendToAdmins(self,msg):
         for admin in self.__cfg['admins']:
             self.send(sendable = {'id':admin, 'message': msg})
+
+    def isAdmin(self,peer):
+        return self.__vk_session.method('messages.getConversationMembers',{'peer_id': peer})['items'][0].get('is_admin')

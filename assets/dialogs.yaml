@@ -1,0 +1,720 @@
+status:
+  - Шиноби
+  - Саннин
+  - Хокаге
+  - ДИВАННЫЙ ВОЙН
+  - SPACE INVADER
+  - ГЭНГСТА-НИГГА
+main:
+  greeting:
+    message: >
+      Карточные бои "Флуд":
+
+      https://vk.me/join/AJQ1d2lVthetszYczBAAd7mx
+
+      В этой беседе происходит общение, а так же поиск соперника и согласование боя
+
+
+
+      Карточные бои "Рейтинг":
+
+      https://vk.me/join/AJQ1dxOp2SCBSf48YjoMLume
+
+      В этой беседе будут происходить сами бои
+
+
+
+      Готовы получить свои начальные карты?
+    keyboard: >
+      {
+      "buttons": [
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Добавить карты",
+          "payload": "{\"addCardsPool\":[1,2,3],\"dialog\":\"main\"}"
+        },
+        "color": "primary"
+      }
+      ]
+      ]
+      }
+
+  main:
+    message: "Тест главного сообщения"
+    keyboard: '
+{
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обучение",
+          "payload": "{\"dialog\":\"tutorial\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+        '
+
+  profile:
+    message: >
+      Ваш статус: {status}
+
+      Ваш баланс: {balance}
+
+      Количество обрывков: {scraps}
+
+      Осталось боев: {battles}
+      
+      КОЛИЧЕСТВО БОЕВ СБРАСЫВАЕТСЯ В 12:00 ПО МОСКОВСКОМУ ВРЕМЕНИ
+    keyboard: >
+      {
+      "buttons": [
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Магазин",
+          "payload": "{\"dialog\":\"shop\"}"
+        },
+        "color": "primary"
+      }
+      ],
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Коллекции",
+          "payload": "{\"dialog\":\"collection\"}"
+        },
+        "color": "primary"
+      }
+      ],
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Прокачка",
+          "payload": "{\"dialog\":\"upgrade\"}"
+        },
+        "color": "primary"
+      }
+      ],
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"main\"}"
+        },
+        "color": "primary"
+      }
+      ]
+      ]
+      }
+
+  shop:
+    message: >
+      Магазин
+
+
+
+      Обычный пак: 100 монет
+
+      Шансы выпадения:
+      
+      85% - обычная
+      
+      15% - редкая
+
+
+
+      Редкий пак: 150 монет
+
+      Шансы выпадения: 
+      
+      5% - обычная
+      
+      85% - редкая
+      
+      10% - эпическая
+
+
+
+      Эпический пак: 200 монет
+
+      Шансы выпадения:
+      
+      92% - эпическая
+      
+      8% - легендарная
+      
+      
+      
+      Рандом пак: 170 монет
+      
+      Шансы выпадения: 
+      
+      Любая карта 1 уровня
+
+
+
+      Ваш баланс: {balance}
+    keyboard: >
+        {
+        "buttons": [
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"getPack\":0}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"getPack\":1}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"getPack\":2}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Случайный",
+          "payload": "{\"getPack\":3}"
+        },
+        "color": "primary"
+        }
+        ],
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+
+  notenough:
+    message: Не хватает средств
+  
+  purchase:
+    message: > 
+      Вам выпала карта {card}
+
+      Поздравляем!
+
+  upgrade:
+    message: >
+      Прокачка карт
+
+      Вы можете улучшить карту за повторки или за обрывки
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "За повторки",
+          "payload": "{\"dialog\":\"upgrade_repeat\"}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "За обрывки",
+          "payload": "{\"dialog\":\"upgrade_scraps\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}  
+'
+  upgrade_scraps:
+    message: >
+      Прокачка случайной карты за обрывки
+
+
+
+      Стоимость:
+
+      Обычная - 25 обрывков
+
+      Редкая - 30 обрывков
+
+      Эпическая - 35 обрывков
+
+      Легендарная - 40 обрывков
+
+    keyboard: '
+        {
+        "buttons": [
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "Обычная",
+          "payload": "{\"upgrade\":[\"1\"]}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Редкая",
+          "payload": "{\"upgrade\":[\"2\"]}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Эпическая",
+          "payload": "{\"upgrade\":[\"3\"]}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Легендарная",
+          "payload": "{\"upgrade\":[\"4\"]}"
+        },
+        "color": "primary"
+        }
+        ],
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+    '
+  upgrade_repeat:
+    message: >
+      Прокачка случайной карты за повторки
+
+
+
+      Стоимость:
+
+      Обычная - 3 повторки
+
+      Редкая - 3 повторки
+
+      Эпическая - 2 повторки
+
+      Легендарная - 2 повторки
+
+    keyboard: '
+{
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Прокачать все повторки",
+          "payload": "{\"upgrade\":[\"ПОВТОРКИ\"]}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+
+  upgraded:
+    message: >
+      Карта {card} была улучшена
+
+  upgraded_multi:
+    message: >
+      Улучшены карты:
+
+
+
+      {card}  
+
+  upgrade_fail:
+    message: >
+      У вас нет подходящих карт для улучшения
+
+    keyboard: '
+      {
+      "buttons": [
+      [
+        {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+    '
+  collection:
+    message: >
+      Выберите уровень
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "1 уровень",
+          "payload": "{\"showCards\":[\"УРОВЕНЬ\", \"1\"]}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "2 уровень",
+          "payload": "{\"showCards\":[\"УРОВЕНЬ\", \"2\"]}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+  nocards:
+    message: >
+      У вас нет таких карт
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}   
+    ' 
+  poolcards:
+    message: >
+      Вам были выданы следующие карты
+
+      {card}
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}   
+    '
+
+
+
+  firstPlayer:
+    message: >
+      Ходит первый игрок
+
+  secondPlayer:
+    message: >
+      Ходит второй игрок
+
+  tutorial:
+    message: >
+      ТЕГИ
+
+      Для их ввода нужно использовать один из этих знаков
+
+      . / # !
+
+
+
+
+
+      Победа - обьявить о победе
+
+
+
+      Поражение - обьявить о поражении
+
+
+
+      Судья - обьявить о судействе
+
+
+
+      Флип - Выбор ходящего игрока случайным образом
+
+
+
+      Профиль - Посмотреть профиль
+
+      •  Шорткаты - П, Проф
+
+
+
+      Апгрейд - Улучшить карту 
+
+      • Аргументы
+
+        ■ Повторки - Прокачать все карты за повторки
+
+          ■ Стоимости 
+
+            ■ Обычные - 3 повторки
+
+            ■ Редкие - 3 повторки 
+
+            ■ Эпические - 2 повторки 
+
+            ■ Легендарные - 2 повторки 
+
+          ■ Шорткаты - Повт
+
+        ■ Число редкости - прокачать случайную карту выбранной редкости
+
+
+
+          ■ Стоимости 
+
+            ■ Обычные (1) - 25 обрывков
+
+            ■ Редкие (2) - 30 обрывков
+
+            ■ Эпические (3) - 35 обрывков
+
+            ■ Легендарные (4) - 40 обрывков 
+
+          ■ Шорткаты - Р, Ред
+
+        ■ Название карты - прокачать выбранную карту
+
+          ■ Стоимости 
+
+            ■ Обычная - 25 обрывков
+
+            ■ Редкая - 30 обрывков
+
+            ■ Эпическая - 35 обрывков
+
+            ■ Легендарная - 40 обрывков
+
+      • Аргументы ОБЯЗАТЕЛЬНЫ
+
+      Карта - Посмотреть карты
+
+      • Аргументы
+
+        ■ Нет - Показать все имеющиеся карты 
+
+        ■ Уровень - Показать карты выбранного уровня
+
+          ■ Шорткаты - Ур
+
+        ■ Редкость - показать карты выбранной редкости
+
+          ■ Редкости
+
+            ■ Обычная - 1
+
+            ■ Редкая - 2
+
+            ■ Эпическая - 3
+
+            ■ Легендарная - 4
+
+          ■ Шорткаты - Р, Ред
+
+      Магазин - Магазин карт
+
+  profile_inline:
+    message: >
+      Ваш статус: {status}
+
+      Ваш баланс: {balance}
+
+      Количество обрывков: {scraps}
+
+      Осталось боев: {battles}
+      
+      КОЛИЧЕСТВО БОЕВ СБРАСЫВАЕТСЯ В 12:00 ПО МОСКОВСКОМУ ВРЕМЕНИ
+
+
+  shop_inline:
+    keyboard: '
+{
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"getPack\":0}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"getPack\":1}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"getPack\":2}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Случайный",
+          "payload": "{\"getPack\":3}"
+        },
+        "color": "primary"
+      }
+    ]
+  ],
+  "inline": true
+}
+    '
+    message: >
+      Магазин
+
+
+
+      Обычный пак: 100 монет
+
+      Шансы выпадения:
+      
+      85% - обычная
+      
+      15% - редкая
+
+
+
+      Редкий пак: 150 монет
+
+      Шансы выпадения: 
+      
+      5% - обычная
+      
+      85% - редкая
+      
+      10% - эпическая
+
+
+
+      Эпический пак: 200 монет
+
+      Шансы выпадения:
+      
+      92% - эпическая
+      
+      8% - легендарная
+      
+      
+      
+      Рандом пак: 170 монет
+      
+      Шансы выпадения: 
+      
+      Любая карта 1 уровня
+
+
+
+      Ваш баланс: {balance}
+
+
+
+
