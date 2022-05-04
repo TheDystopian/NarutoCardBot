@@ -16,9 +16,7 @@ class core:
             if time() // 86400 < data['db']['day'] or time() % 86400 // 3600 < 9: return
 
             data['db']['battles'] = self.__config['userLevels'][data['db']['status']]['battles']
-            data['db']['loses'] = 0
-            data['db']['wins'] = 0
-            data['db']['judge'] = 0
+            data['db']['loses'] = data['db']['wins'] = data['db']['judge'] = 0
 
             data['db']['day'] = int(time() // 86400 + 1)
 
@@ -27,14 +25,14 @@ class core:
 
             message = message[1:].upper().split()
 
-            foundKey = [k for k, v in self.__config['commands'].items() if message[0] in v['activateOn']][0]
+            foundKey = next((k for k, v in self.__config['commands'].items() if message[0] in v['activateOn']), None)
 
             if (isChat and 'chat' not in self.__config['commands'][foundKey]['permittedIn']) or \
                 (not isChat and 'bot' not in self.__config['commands'][foundKey]['permittedIn']):
                     vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedHere']})
                     return None
-            
-            if 'admins' in self.__config['commands'][foundKey]['permittedIn'] and not vk.isAdmin(data['vk']['peer_id']):
+
+            if 'admins' in self.__config['commands'][foundKey]['permittedIn'] and not vk.isAdmin(data['vk']['peer_id'], data['vk']['user']):
                 vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedAdmin']})
                 return None
 
@@ -42,42 +40,41 @@ class core:
 
         def payloadHandle(payload):
             def dialog(dialog):
-                if isChat: data['vk'].pop('user')
-                vk.send(dialogs.getDialog(data, dialog, card))
-            
-            def win(_=None, toWho = None):
-                if toWho is None:
-                    if not data['db']['battles']:
-                        vk.send({'id': data['vk']['user'], 'message': f'Нет боев'})
-                        return False
+                vk.send(dialogs.getDialog(data, dialog, card, toGroup=isChat))
+                return True
 
-                    data['db']['balance'] += self.__config['userLevels'][data['db']['status']]['winBalance']
-                    data['db']['scraps'] += self.__config['userLevels'][data['db']['status']]['winScraps']
-                    data['db']['battles'] -= 1
-                    vk.send({'id': data['vk']['user'], 'message': f'Вы победили. Вы получаете {self.__config["userLevels"][data["db"]["status"]]["winBalance"]} монет и {self.__config["userLevels"][data["db"]["status"]]["winScraps"]} обрывка'})
-                    return True
-                else:
-                    thatUser = db.getDataFromDB(toWho)
-                    if thatUser is None: return False
-                    thatUser['balance'] += self.__config['userLevels'][thatUser['status']]['winBalance']
-                    thatUser['scraps'] += self.__config['userLevels'][thatUser['status']]['winScraps']
-                    db.editDB(thatUser)
+            def win(_=None):
+                if not data['db']['battles']:
+                    vk.send({'id': data['vk']['user'], 'message': f'Нет боев'})
+                    return False
 
-            def lose(_=None, toWho = None):
-                if toWho is None:
-                    if not data['db']['battles']:
-                        vk.send({'id': data['vk']['user'], 'message': f'Нет боев'})
-                        return False
+                data['db']['balance'] += self.__config['userLevels'][data['db']['status']]['winBalance']
+                data['db']['scraps'] += self.__config['userLevels'][data['db']['status']]['winScraps']
+                data['db']['battles'] -= 1
+                data['db']['wins'] += 1
 
-                    data['db']['balance'] += self.__config['userLevels'][data['db']['status']]['loseBalance']
-                    data['db']['battles'] -= 1
-                    vk.send({'id': data['vk']['user'], 'message': f'Вы проиграли. Вы получаете {self.__config["userLevels"][data["db"]["status"]]["loseBalance"]} монет'})
-                    return True
-                else:
-                    thatUser = db.getDataFromDB(toWho)
-                    if thatUser is None: return False
-                    thatUser['balance'] += self.__config['userLevels'][thatUser['status']]['loseBalance']
-                    db.editDB(thatUser)
+
+                vk.send({'id': data['vk']['user'], 'message': f'Вы победили. Вы получаете {self.__config["userLevels"][data["db"]["status"]]["winBalance"]} монет и {self.__config["userLevels"][data["db"]["status"]]["winScraps"]} обрывка'})
+                if data['db']['wins'] == 5: 
+                    data['db']['scraps'] += 5
+                    vk.send({'id': data['vk']['user'], 'message': f'У вас винстрик 5. Вы получаете 5 обрывков'})
+
+
+                return True
+
+            def lose(_=None):
+                if not data['db']['battles']:
+                    vk.send({'id': data['vk']['user'], 'message': f'Нет боев'})
+                    return False
+
+                data['db']['balance'] += self.__config['userLevels'][data['db']['status']]['loseBalance']
+                data['db']['battles'] -= 1
+                data['db']['loses'] += 1
+
+                vk.send({'id': data['vk']['user'], 'message': f'Вы проиграли. Вы получаете {self.__config["userLevels"][data["db"]["status"]]["loseBalance"]} монет'})
+                if data['db']['loses'] == 5: 
+                    data['db']['balance'] += 20
+                    vk.send({'id': data['vk']['user'], 'message': f'У вас лузстрик 5. Вы получаете 20 монет'})
 
                 return True
 
@@ -100,13 +97,13 @@ class core:
                 
                 elif what[0].isdigit() and int(what[0]) in range(1, len(self.__config['scrapCosts']) + 1):
                     if data['db']['scraps'] < self.__config['scrapCosts'][int(what[0]) - 1]: 
-                        vk.send(dialogs.getDialog(data,'notenough',card))
+                        vk.send(dialogs.getDialog(data,'notenough', toGroup = True))
                         return False
                     
                     upgradeable = [i for i, v in enumerate(whichCards) if v['rarity'] == int(what[0]) and data['db']['cards'][i]['level'] < self.__config['maxLevel']]
 
                     if not len(upgradeable):
-                        vk.send(dialogs.getDialog(data,'upgrade_fail',card))
+                        vk.send(dialogs.getDialog(data,'upgrade_fail', toGroup = True))
                         return False
 
                     selectedCard = choice(upgradeable)
@@ -116,20 +113,22 @@ class core:
                     data['db']['cards'][selectedCard]['level'] += 1
 
                 else:
-                    for i,n in enumerate(whichCards):
-                        if n['name'].upper().split()[0] != what[0] or data['db']['cards'][i]['level'] >= self.__config['maxLevel']: continue
+                    i, n = next(((i,n) for i,n in enumerate(whichCards) if n['name'].upper().split()[0] == what[0] and data['db']['cards'][i]['level'] < self.__config['maxLevel']), None)
 
-                        if data['db']['scraps'] < self.__config['scrapCosts'][n['rarity'] - 1]: 
-                            vk.send(dialogs.getDialog(data,'notenough',card))
-                            return False
+                    if i is None:
+                        vk.send(dialogs.getDialog(data,'nocards'))
+                        return False
 
-                        upgradedCards.append(i)
+                    if data['db']['scraps'] < self.__config['scrapCosts'][n['rarity'] - 1]: 
+                        vk.send(dialogs.getDialog(data,'notenough'))
+                        return False
 
-                        data['db']['scraps'] -= self.__config['scrapCosts'][n['rarity'] - 1]                            
-                        data['db']['cards'][i]['level'] += 1 
-                        break
+                    upgradedCards.append(i)
+
+                    data['db']['scraps'] -= self.__config['scrapCosts'][n['rarity'] - 1]                            
+                    data['db']['cards'][i]['level'] += 1 
                 
-                vk.send(dialogs.getDialog(data,'upgrade_fail' if not len(upgradedCards) else'upgraded' if len(upgradedCards) == 1 else 'upgraded_multi', card, upgradedCards))
+                vk.send(dialogs.getDialog(data,'upgrade_fail' if not len(upgradedCards) else'upgraded' if len(upgradedCards) == 1 else 'upgraded_multi', card, upgradedCards, toGroup = True))
                 return True
 
             def addCardsPool(pool):
@@ -139,18 +138,18 @@ class core:
 
             def getPack(pack):
                 if self.__config['packSettings'][pack]['price'] > data['db']['balance']:
-                    vk.send(dialogs.getDialog(data,'notenough',card))
+                    vk.send(dialogs.getDialog(data,'notenough', toGroup = True))
                     return False
                 
                 data['db']['cards'].append(card.getCardByRarity(chances = self.__config['packSettings'][pack]['rarities']))
                 data['db']['balance'] -= self.__config['packSettings'][pack]['price']
 
-                vk.send(dialogs.getDialog(data,'purchase',card))
+                vk.send(dialogs.getDialog(data,'purchase',card, toGroup = True))
                 return True
 
             def showCards(which):
                 if not len(data['db']['cards']):
-                    vk.send(dialogs.getDialog(data,'nocards', card))
+                    vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
                     return False
 
                 cardData = card.getOwnedCards(data['db']['cards'])
@@ -158,29 +157,48 @@ class core:
 
                 if len(which) < 2:
                     for c in [i for n, i in enumerate(cardData) if i not in cardData[n + 1:]]:
-                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{cardData.count(c)}' if cardData.count(c) > 1 else None}, attachments=[c['attachment']])
+                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{cardData.count(c)}' if cardData.count(c) > 1 else None}, attachments=c['attachment'])
 
                 elif which[0] in self.__config['subOptions']['level']['activateOn'] or which[0] in self.__config['subOptions']['rarity']['activateOn']:
                     cardBuff = [c for r,c in zip(data['db']['cards'], cardData) if r['level'] == int(which[1])]\
-                         if which[0] in self.__config['subOptions']['level']['activateOn'] else\
-                         [c for c in cardData if c['rarity'] == int(which[1])]
+                        if which[0] in self.__config['subOptions']['level']['activateOn'] else\
+                        [c for c in cardData if c['rarity'] == int(which[1])]
 
                     if not len(cardBuff):
-                        vk.send(dialogs.getDialog(data,'nocards', card))
+                        vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
 
                     for c in cardBuff:
-                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{cardData.count(c)}' if cardData.count(c) > 1 else None}, attachments=[c['attachment']])
+                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{cardData.count(c)}' if cardData.count(c) > 1 else None}, attachments=c['attachment'])
 
             def give(what):
                 if not len(what) or data['vk']['reply_id'] is None:
                     vk.send({'peer_id': data['vk']['peer_id'], 'message':'Что?'})
                     return False
 
+                thatUser = db.getDataFromDB(data['vk']['reply_id'])
+                if thatUser is None: return False
+
                 if what[0] in self.__config['commands']['win']['activateOn']:
-                    win(toWho=data['vk']['reply_id'])
+                    thatUser['wins'] +=1
+                    thatUser['balance'] += self.__config['userLevels'][thatUser['status']]['winBalance']
+                    thatUser['scraps'] += self.__config['userLevels'][thatUser['status']]['winScraps']
+                    if thatUser['wins'] == 5: thatUser['scraps'] += 5
                 
-                if what[0] in self.__config['commands']['lose']['activateOn']:
-                    lose(toWho=data['vk']['reply_id'])
+                elif what[0] in self.__config['commands']['lose']['activateOn']:
+                    thatUser['loses'] += 1
+                    thatUser['balance'] += self.__config['userLevels'][thatUser['status']]['loseBalance']
+                    if thatUser['loses'] == 5: thatUser['balance'] += 20
+
+                elif len(what) < 2 or not what[1].isdigit(): return False
+
+                elif what[0] in self.__config['subOptions']['balance']['activateOn']:
+                    thatUser['balance'] += int(what[1])             
+
+                elif what[0] in self.__config['subOptions']['scraps']['activateOn']:
+                    thatUser['scraps'] += int(what[1]) 
+
+                db.editDB(thatUser)
+
                 return False
 
             def remove(what):
@@ -188,27 +206,52 @@ class core:
                     vk.send({'peer_id': data['vk']['peer_id'], 'message':'Что?'})
                     return False
 
+                thatUser = db.getDataFromDB(data['vk']['reply_id'])
+                if thatUser is None: return False
+
                 if what[0] in self.__config['commands']['win']['activateOn']:
-                    thatUser = db.getDataFromDB(data['vk']['reply_id'])
                     thatUser['balance'] -= self.__config['userLevels'][thatUser['status']]['winBalance']
                     thatUser['scraps'] -= self.__config['userLevels'][thatUser['status']]['winScraps']
                     thatUser['battles'] += 1
-                    db.editDB(thatUser)
+                    if thatUser['wins'] == 5: thatUser['scraps'] -= 5
+                    thatUser['wins'] -= 1
+                    
                 
-                if what[0] in self.__config['commands']['lose']['activateOn']:
-                    thatUser = db.getDataFromDB(data['vk']['reply_id'])
+                elif what[0] in self.__config['commands']['lose']['activateOn']:
                     thatUser['balance'] -= self.__config['userLevels'][thatUser['status']]['loseBalance']
                     thatUser['battles'] += 1
-                    db.editDB(thatUser)    
-                return False           
+                    if thatUser['loses'] == 5: thatUser['balance'] -= 20
+                    thatUser['loses'] -= 1
+
+                elif len(what) < 2 or not what[1].isdigit(): return False
+
+                elif what[0] in self.__config['subOptions']['balance']['activateOn']:
+                    thatUser['balance'] -= int(what[1])             
+
+                elif what[0] in self.__config['subOptions']['scraps']['activateOn']:
+                    thatUser['scraps'] -= int(what[1]) 
+
+                db.editDB(thatUser)
+
+                return False
 
             def flip(_):
-                vk.send(dialogs.getDialog(data,choice(['firstPlayer','secondPlayer']),card))
+                vk.send(dialogs.getDialog(data,choice(['firstPlayer','secondPlayer']), toGroup=True))
 
+            def judge(_):
+               data['db']['balance'] += 1
+               if data['db']['judge'] == 10: data['db']['balance'] +=10
+               return True
+
+            def profile(_):
+                if data['vk']['reply_id'] is None or data['vk']['reply_id'] == data['vk']['user'] or data['vk']['reply_id'] < 1:
+                     vk.send(dialogs.getDialog(data, 'profile_inline', toGroup=True))
+                else:
+                    vk.send(dialogs.getDialog({'vk':data['vk'],'db':db.getDataFromDB(data['vk']['reply_id'])},'profile_inline_otheruser', toGroup = True))
+                return False
 
             PAYLOADCONVERT = {
                 'tutorial': {'dialog':'tutorial'},
-                'profile': {'dialog':'profile_inline'},
                 'shop': {'dialog':'shop_inline'}
             }
 
@@ -217,10 +260,11 @@ class core:
                     payload = PAYLOADCONVERT[list(payload.keys())[0]]
 
             for func, args in payload.items():
+                if not func in locals(): continue
                 if not locals()[func](args): return False
 
             return True
-            
+
         dailyEvent()
         payload = textRecognition(data['vk']['text'])
         if payload is None:

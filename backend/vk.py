@@ -3,6 +3,7 @@ from json import loads
 from vk_api import bot_longpoll
 from os.path import dirname,join
 from vk_api.utils import get_random_id
+from operator import itemgetter
 
 class VK:
     def __init__(self,file):
@@ -10,13 +11,11 @@ class VK:
         with open(join(dirname(__file__),file),"r") as cfg:
             self.__cfg = yaml.safe_load(cfg)
 
-
-        self.__vk_session=vk_api.VkApi(token=self.__cfg['APIKey'])
-        self.__LP = bot_longpoll.VkBotLongPoll(self.__vk_session, self.__vk_session.method('groups.getById')[0]['id'])
+        self.__vk_session=vk_api.VkApi(token=self.__cfg['APIKey'],api_version='5.144')
+        self.__LP = bot_longpoll.VkBotLongPoll(self.__vk_session, self.__vk_session.method('groups.getById')['groups'][0]['id'])
 
 
     def send(self, sendable = None, attachments = None):
-
         if attachments is not None:
             for atch in attachments:
                 self.__vk_session.method('messages.send', {'attachment': atch,'user_id': sendable.get('id'), 'random_id': get_random_id(), 'peer_id': sendable.get('peer_id'), 'message': sendable.get('message')})
@@ -47,5 +46,5 @@ class VK:
         for admin in self.__cfg['admins']:
             self.send(sendable = {'id':admin, 'message': msg})
 
-    def isAdmin(self,peer):
-        return self.__vk_session.method('messages.getConversationMembers',{'peer_id': peer})['items'][0].get('is_admin')
+    def isAdmin(self,peer,user):
+        return next((i.get('is_admin') for i in self.__vk_session.method('messages.getConversationMembers',{'peer_id': peer})['items'] if i['member_id'] == user),None)

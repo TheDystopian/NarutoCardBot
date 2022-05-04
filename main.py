@@ -19,6 +19,7 @@ def bot_main():
 
     try:
         for data in vk.wait():
+            if data['user'] < 1: continue
             data = {'vk':data, 'db': db.getDataFromDB(data['user'])}
 
             if data['db'] is None:
@@ -30,8 +31,9 @@ def bot_main():
                 db.editDB(data['db'])
 
     except Exception as e:
-        vk.sendToAdmins(f'Directed by:\n{e}\nExecutive producer:\n{data}')
-        return e
+        print(e)
+        if e.args[0][:4] != "HTTPS":
+            vk.sendToAdmins(f'Directed by:\n{e}\nExecutive producer:\n{data}')
 
 
 if __name__ == '__main__':

@@ -10,14 +10,14 @@ class cards:
 
         self.__pooledCards = [i for i in self.__cards['cards'] if 'pool' in i]
 
-    def getCardByRarity(self, cards = None, chances = None):
-        if chances is None or not len(chances) or '0' in chances:
+    def getCardByRarity(self, cards = None, chances = {}):
+        if '0' in chances:
             return {
                 'id': randint(0,len(self.__cards['cards']) - 1),
                 'level': 1
             }
 
-        chances = {k:chances[k] for k in sorted(chances,reverse=True)} if chances is not None else self.__cards['defaultProbs']
+        chances = {k:chances[k] for k in sorted(chances,reverse=True)} if chances != {} else self.__cards['defaultProbs']
 
         rarities = {str(i.get('rarity')) for i in cards} if cards is not None else set(chances)
         if cards is None: cards = self.__cards['cards']
@@ -33,10 +33,7 @@ class cards:
         chances = {k:sum(list(chances.values())[:i+1]) for i, k in enumerate(chances.keys()) }
 
         # constant for list comrehension
-        for k,v in chances.items():
-            if prob <= v:
-                chosenRarity = k
-                break
+        chosenRarity = next((k for k,v in chances.items() if prob <= v), '1')
 
         return {'id':self.__cards['cards'].index(choice([
         a for a in cards 

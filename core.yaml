@@ -65,7 +65,6 @@ commands:
     activateOn:
       - П
       - ПРОФ
-      - ПРОФИЛЬ
   showCards:
     permittedIn:
       - chat
@@ -117,6 +116,14 @@ subOptions:
     activateOn:
       - ПОВТОРКИ
       - ПОВТ
+  scraps:
+    activateOn:
+      - ОБР
+      - ОБРЫВКИ
+  balance:
+    activateOn:
+      - БАЛАНС
+      - БАЛ
 
   
 commandCall:
@@ -147,7 +154,7 @@ packSettings:
       '3': 92
       '4': 8
   - 
-    price: 200
+    price: 170
     rarities:
       '0'
 
