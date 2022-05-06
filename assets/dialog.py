@@ -11,7 +11,7 @@ class dialog:
         if data['db'] is None:
             return {'id':data['vk']['user'], 'message': self.__messages['main']['greeting']['message'], 'keyboard':self.__messages['main']['greeting']['keyboard'] }
 
-        cardData = cards.getOwnedCards(data['db']['cards']) if not cards is None and len(data['db']['cards']) else None
+        cardData = cards.getOwnedCards(data['db']['cards']) if not cards is None and data['db']['cards'] else None
 
         if not isinstance(dialog,list): dialog = [dialog]
 

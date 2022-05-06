@@ -2,7 +2,8 @@ from yaml import safe_load
 from os.path import dirname,join
 from itertools import chain,islice
 from time import time
-from random import choice
+from random import choice, randrange
+from collections import defaultdict
 
 class core:
     def __init__(self,file):
@@ -79,7 +80,7 @@ class core:
                 return True
 
             def upgrade(what):
-                if not len(what): return False
+                if not what: return False
                 whichCards = card.getOwnedCards(data['db']['cards'])
 
                 upgradedCards = []
@@ -113,7 +114,7 @@ class core:
                     data['db']['cards'][selectedCard]['level'] += 1
 
                 else:
-                    i, n = next(((i,n) for i,n in enumerate(whichCards) if n['name'].upper().split()[0] == what[0] and data['db']['cards'][i]['level'] < self.__config['maxLevel']), None)
+                    i,n = next( ( (i,n) for i,n in enumerate(whichCards) if n['name'].upper().find(" ".join(what)) != -1 and data['db']['cards'][i]['level'] < self.__config['maxLevel']), (None, None))
 
                     if i is None:
                         vk.send(dialogs.getDialog(data,'nocards'))
@@ -148,30 +149,42 @@ class core:
                 return True
 
             def showCards(which):
-                if not len(data['db']['cards']):
+                if not data['db']['cards']:
                     vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
                     return False
+           
+                cds = card.getOwnedCards(data['db']['cards'])
+                cds = [(cds.count(n), n) for i, n in enumerate(cds) if n not in cds[i+1:]]
 
-                cardData = card.getOwnedCards(data['db']['cards'])
+                if not which:
+                    for c, k in cds:
+                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{c}' if c > 1 else None}, attachments=k['attachment'])
+                    return 
 
+                if len(which) == 1:
+                    found = [n for n in cds if n[1]['name'].upper().find(" ".join(which)) != -1]
 
-                if len(which) < 2:
-                    for c in [i for n, i in enumerate(cardData) if i not in cardData[n + 1:]]:
-                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{cardData.count(c)}' if cardData.count(c) > 1 else None}, attachments=c['attachment'])
-
-                elif which[0] in self.__config['subOptions']['level']['activateOn'] or which[0] in self.__config['subOptions']['rarity']['activateOn']:
-                    cardBuff = [c for r,c in zip(data['db']['cards'], cardData) if r['level'] == int(which[1])]\
-                        if which[0] in self.__config['subOptions']['level']['activateOn'] else\
-                        [c for c in cardData if c['rarity'] == int(which[1])]
-
-                    if not len(cardBuff):
+                    if not found: 
                         vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
 
-                    for c in cardBuff:
-                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{cardData.count(c)}' if cardData.count(c) > 1 else None}, attachments=c['attachment'])
+                    for c,f in found:
+                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{c}' if c > 1 else None}, attachments=f['attachment'])
+                    return
+
+                if which[1].isdigit(): 
+                    if which[0] in self.__config['subOptions']['rarity']['activateOn']:
+                        filteredCards = [(c,k) for c,k in cds if k['rarity'] == int(which[1])]
+                    elif which[0] in self.__config['subOptions']['level']['activateOn']:
+                        cardOwn = {frozenset(i.items()):i for i in data['db']['cards']}.values()
+                        filteredCards = [n for cod, n in zip(cardOwn, cds) if cod['level'] == int(which[1])]
+
+                    if not filteredCards:
+                        vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
+                    for c,k in filteredCards:
+                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{c}' if c > 1 else None}, attachments=k['attachment']) 
 
             def give(what):
-                if not len(what) or data['vk']['reply_id'] is None:
+                if not what or data['vk']['reply_id'] is None:
                     vk.send({'peer_id': data['vk']['peer_id'], 'message':'Что?'})
                     return False
 
@@ -202,7 +215,7 @@ class core:
                 return False
 
             def remove(what):
-                if not len(what) or data['vk']['reply_id'] is None:
+                if not what or data['vk']['reply_id'] is None:
                     vk.send({'peer_id': data['vk']['peer_id'], 'message':'Что?'})
                     return False
 
@@ -244,11 +257,28 @@ class core:
                return True
 
             def profile(_):
-                if data['vk']['reply_id'] is None or data['vk']['reply_id'] == data['vk']['user'] or data['vk']['reply_id'] < 1:
-                     vk.send(dialogs.getDialog(data, 'profile_inline', toGroup=True))
+                if data['vk']['reply_id'] is None or data['vk']['reply_id'] < 1:
+                    vk.send(dialogs.getDialog(data, 'profile_inline', toGroup=True))
                 else:
-                    vk.send(dialogs.getDialog({'vk':data['vk'],'db':db.getDataFromDB(data['vk']['reply_id'])},'profile_inline_otheruser', toGroup = True))
-                return False
+                    dbUser = db.getDataFromDB(data['vk']['reply_id'])
+                    if dbUser is None: return 
+
+                    if not vk.isAdmin(data['vk']['peer_id'], data['vk']['user']):
+                        vk.send(dialogs.getDialog({'vk':data['vk'],'db':dbUser},'profile_inline_otheruser', toGroup = True))
+                    else:
+                        vk.send(dialogs.getDialog({'vk':data['vk'],'db':dbUser},'profile_inline'))
+
+                return
+
+            def chance(chance):
+                if not chance or not chance[0].isdigit() or int(chance[0]) not in range(1, 101):
+                    vk.send({'peer_id': data['vk'].get('peer_id'), 'message': 'Недопустимое значение' })
+                    return
+
+                vk.send({'peer_id': data['vk'].get('peer_id'), 'message': 'Вы попали в шанс' if randrange(1,101) < int(chance[0]) else 'Вы не попали в шанс' })
+
+                
+
 
             PAYLOADCONVERT = {
                 'tutorial': {'dialog':'tutorial'},

@@ -47,4 +47,4 @@ class VK:
             self.send(sendable = {'id':admin, 'message': msg})
 
     def isAdmin(self,peer,user):
-        return next((i.get('is_admin') for i in self.__vk_session.method('messages.getConversationMembers',{'peer_id': peer})['items'] if i['member_id'] == user),None)
+        return next((i.get('is_admin') for i in self.__vk_session.method('messages.getConversationMembers',{'peer_id': peer})['items'] if i['member_id'] == user),False)

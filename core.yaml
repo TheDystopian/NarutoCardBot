@@ -99,6 +99,12 @@ commands:
     activateOn:
       - СНЯТЬ
       - УБРАТЬ
+  chance:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - ШАНС
 
 
 
@@ -124,6 +130,7 @@ subOptions:
     activateOn:
       - БАЛАНС
       - БАЛ
+
 
   
 commandCall:
