@@ -48,7 +48,7 @@ class core:
                     payload[list(payload.keys())[-1]] = {foundKey: []}
                 else:
                     if not payload: continue
-                    if not payload[list(payload.keys())[-1]]:
+                    if not isinstance(list(payload.keys())[-1],dict):
                         payload[list(payload.keys())[-1]].append(i)
                     else: 
                         items = list(payload.items())[-1]
