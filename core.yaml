@@ -177,4 +177,10 @@ repeatsNeeded:
   - 2
   - 2
 
+breakPrice:
+  - 5
+  - 8
+  - 15
+  - 25
+
 maxLevel: 2

@@ -426,7 +426,7 @@ main:
         "action": {
           "type": "text",
           "label": "1 уровень",
-          "payload": "{\"showCards\":[\"УРОВЕНЬ\", \"1\"]}"
+          "payload": "{\"showCards\":{\"level\": \"1\"}}"
         },
         "color": "primary"
       },
@@ -434,7 +434,7 @@ main:
         "action": {
           "type": "text",
           "label": "2 уровень",
-          "payload": "{\"showCards\":[\"УРОВЕНЬ\", \"2\"]}"
+          "payload": "{\"showCards\":{\"level\": \"2\"}}"
         },
         "color": "primary"
       }

@@ -3,14 +3,14 @@ from os.path import dirname,join
 from itertools import chain,islice
 from time import time
 from random import choice, randrange
-from collections import defaultdict
 
 class core:
     def __init__(self,file):
         with open(join(dirname(__file__),file),"r",encoding= "utf-8") as conf:
             self.__config = safe_load(conf)
 
-        self.__allPhrases = list(chain.from_iterable([i['activateOn'] for i in list(self.__config['commands'].values())])) 
+        self.__allPhrases = set(chain.from_iterable([i['activateOn'] for i in list(self.__config['commands'].values())]))
+        self.__allSubPhrases = set(chain.from_iterable([i['activateOn'] for i in list(self.__config['subOptions'].values())]))
 
     def core(self,data,vk,dialogs,card,db,isChat):
         def dailyEvent():
@@ -22,22 +22,39 @@ class core:
             data['db']['day'] = int(time() // 86400 + 1)
 
         def textRecognition(message):
-            if len(message) < 2 or message[0] not in self.__config['commandCall'] or message[1:].upper().split()[0] not in self.__allPhrases: return None
+            if len(message) < 2: return None
 
-            message = message[1:].upper().split()
+            payload = {}
 
-            foundKey = next((k for k, v in self.__config['commands'].items() if message[0] in v['activateOn']), None)
+            if not message[0] in self.__config['commandCall']: return None
 
-            if (isChat and 'chat' not in self.__config['commands'][foundKey]['permittedIn']) or \
-                (not isChat and 'bot' not in self.__config['commands'][foundKey]['permittedIn']):
-                    vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedHere']})
-                    return None
+            for i in message[1:].upper().split():
+                if i in self.__allPhrases:
+                    foundKey = next((k for k, v in self.__config['commands'].items() if i in v['activateOn']))
 
-            if 'admins' in self.__config['commands'][foundKey]['permittedIn'] and not vk.isAdmin(data['vk']['peer_id'], data['vk']['user']):
-                vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedAdmin']})
-                return None
+                    if (isChat and 'chat' not in self.__config['commands'][foundKey]['permittedIn']) or \
+                        (not isChat and 'bot' not in self.__config['commands'][foundKey]['permittedIn']):
+                            vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedHere']})
+                            return None
 
-            return {foundKey:message[1:]}
+                    if 'admins' in self.__config['commands'][foundKey]['permittedIn'] and not vk.isAdmin(data['vk']['peer_id'], data['vk']['user']):
+                        vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedAdmin']})
+                        return None
+
+                    payload[foundKey] = []
+                elif i in self.__allSubPhrases:
+                    if not payload: continue
+                    foundKey = next((k for k, v in self.__config['subOptions'].items() if i in v['activateOn']))
+                    payload[list(payload.keys())[-1]] = {foundKey: []}
+                else:
+                    if not payload: continue
+                    if not payload[list(payload.keys())[-1]]:
+                        payload[list(payload.keys())[-1]].append(i)
+                    else: 
+                        items = list(payload.items())[-1]
+                        payload[items[0]][list(items[1].keys())[-1]].append(i)
+                    
+            return payload
 
         def payloadHandle(payload):
             def dialog(dialog):
@@ -85,7 +102,7 @@ class core:
 
                 upgradedCards = []
 
-                if what[0] in self.__config['subOptions']['repeats']['activateOn']:
+                if "repeats" in what:
                     for i, c in zip(whichCards, data['db']['cards']):
                         if data['db']['cards'].count(c) < self.__config['repeatsNeeded'][i['rarity'] - 1] or c['level'] >= self.__config['maxLevel']: continue
 
@@ -96,6 +113,9 @@ class core:
                         [data['db']['cards'].pop(i) and whichCards.pop(i) for i in duplicates[1:]]
                         data['db']['cards'][duplicates[0]]['level'] += 1                     
                 
+                elif not isinstance(what,list): return
+
+
                 elif what[0].isdigit() and int(what[0]) in range(1, len(self.__config['scrapCosts']) + 1):
                     if data['db']['scraps'] < self.__config['scrapCosts'][int(what[0]) - 1]: 
                         vk.send(dialogs.getDialog(data,'notenough', toGroup = True))
@@ -159,29 +179,25 @@ class core:
                 if not which:
                     for c, k in cds:
                         vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{c}' if c > 1 else None}, attachments=k['attachment'])
-                    return 
-
-                if len(which) == 1:
-                    found = [n for n in cds if n[1]['name'].upper().find(" ".join(which)) != -1]
-
-                    if not found: 
-                        vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
-
-                    for c,f in found:
-                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{c}' if c > 1 else None}, attachments=f['attachment'])
                     return
 
-                if which[1].isdigit(): 
-                    if which[0] in self.__config['subOptions']['rarity']['activateOn']:
-                        filteredCards = [(c,k) for c,k in cds if k['rarity'] == int(which[1])]
-                    elif which[0] in self.__config['subOptions']['level']['activateOn']:
-                        cardOwn = {frozenset(i.items()):i for i in data['db']['cards']}.values()
-                        filteredCards = [n for cod, n in zip(cardOwn, cds) if cod['level'] == int(which[1])]
+                elif "level" in which:
+                    cardOwn = {frozenset(i.items()):i for i in data['db']['cards']}.values()
+                    filteredCards = [n for cod, n in zip(cardOwn, cds) if cod['level'] == int(which['level'][0])]
 
-                    if not filteredCards:
-                        vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
-                    for c,k in filteredCards:
-                        vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{c}' if c > 1 else None}, attachments=k['attachment']) 
+                elif "rarity" in which:
+                    filteredCards = [(c,k) for c,k in cds if k['rarity'] == int(which['rarity'][0])]
+
+                elif isinstance(which,list):
+                    filteredCards = [n for n in cds if n[1]['name'].upper().find(" ".join(which)) != -1]
+
+                else: return
+
+                if not filteredCards:
+                    vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
+
+                for c,k in filteredCards:
+                    vk.send({'peer_id': data['vk'].get('peer_id'),'message':f'x{c}' if c > 1 else None}, attachments=k['attachment']) 
 
             def give(what):
                 if not what or data['vk']['reply_id'] is None:
@@ -191,24 +207,22 @@ class core:
                 thatUser = db.getDataFromDB(data['vk']['reply_id'])
                 if thatUser is None: return False
 
-                if what[0] in self.__config['commands']['win']['activateOn']:
+                if "win" in what:
                     thatUser['wins'] +=1
                     thatUser['balance'] += self.__config['userLevels'][thatUser['status']]['winBalance']
                     thatUser['scraps'] += self.__config['userLevels'][thatUser['status']]['winScraps']
                     if thatUser['wins'] == 5: thatUser['scraps'] += 5
                 
-                elif what[0] in self.__config['commands']['lose']['activateOn']:
+                elif "lose" in what:
                     thatUser['loses'] += 1
                     thatUser['balance'] += self.__config['userLevels'][thatUser['status']]['loseBalance']
                     if thatUser['loses'] == 5: thatUser['balance'] += 20
 
-                elif len(what) < 2 or not what[1].isdigit(): return False
+                elif "balance" in what:
+                    thatUser['balance'] += int(what['balance'][0])             
 
-                elif what[0] in self.__config['subOptions']['balance']['activateOn']:
-                    thatUser['balance'] += int(what[1])             
-
-                elif what[0] in self.__config['subOptions']['scraps']['activateOn']:
-                    thatUser['scraps'] += int(what[1]) 
+                elif "scraps" in what:
+                    thatUser['scraps'] += int(what['scraps'][0]) 
 
                 db.editDB(thatUser)
 
@@ -222,7 +236,7 @@ class core:
                 thatUser = db.getDataFromDB(data['vk']['reply_id'])
                 if thatUser is None: return False
 
-                if what[0] in self.__config['commands']['win']['activateOn']:
+                if "win" in what:
                     thatUser['balance'] -= self.__config['userLevels'][thatUser['status']]['winBalance']
                     thatUser['scraps'] -= self.__config['userLevels'][thatUser['status']]['winScraps']
                     thatUser['battles'] += 1
@@ -230,19 +244,11 @@ class core:
                     thatUser['wins'] -= 1
                     
                 
-                elif what[0] in self.__config['commands']['lose']['activateOn']:
+                elif "lose" in what:
                     thatUser['balance'] -= self.__config['userLevels'][thatUser['status']]['loseBalance']
                     thatUser['battles'] += 1
                     if thatUser['loses'] == 5: thatUser['balance'] -= 20
                     thatUser['loses'] -= 1
-
-                elif len(what) < 2 or not what[1].isdigit(): return False
-
-                elif what[0] in self.__config['subOptions']['balance']['activateOn']:
-                    thatUser['balance'] -= int(what[1])             
-
-                elif what[0] in self.__config['subOptions']['scraps']['activateOn']:
-                    thatUser['scraps'] -= int(what[1]) 
 
                 db.editDB(thatUser)
 
@@ -275,10 +281,7 @@ class core:
                     vk.send({'peer_id': data['vk'].get('peer_id'), 'message': 'Недопустимое значение' })
                     return
 
-                vk.send({'peer_id': data['vk'].get('peer_id'), 'message': 'Вы попали в шанс' if randrange(1,101) < int(chance[0]) else 'Вы не попали в шанс' })
-
-                
-
+                vk.send({'peer_id': data['vk'].get('peer_id'), 'message': 'Успешно' if randrange(1,101) <= int(chance[0]) else 'Не успешно' })
 
             PAYLOADCONVERT = {
                 'tutorial': {'dialog':'tutorial'},
@@ -296,9 +299,9 @@ class core:
             return True
 
         dailyEvent()
-        payload = textRecognition(data['vk']['text'])
+        payload = data['vk']['payload']
         if payload is None:
-            payload = data['vk']['payload']
+            payload = textRecognition(data['vk']['text'])
             if payload is None: return False
 
         return payloadHandle(payload)
