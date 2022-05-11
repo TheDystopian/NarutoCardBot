@@ -92,9 +92,7 @@ main:
           "payload": "{\"dialog\":\"shop\"}"
         },
         "color": "primary"
-      }
-      ],
-      [
+      },
       {
         "action": {
           "type": "text",
@@ -102,14 +100,20 @@ main:
           "payload": "{\"dialog\":\"collection\"}"
         },
         "color": "primary"
-      }
-      ],
-      [
+      },
       {
         "action": {
           "type": "text",
           "label": "Прокачка",
           "payload": "{\"dialog\":\"upgrade\"}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Паки",
+          "payload": "{\"dialog\":\"packs\"}"
         },
         "color": "primary"
       }
@@ -363,7 +367,7 @@ main:
         "action": {
           "type": "text",
           "label": "Прокачать все повторки",
-          "payload": "{\"upgrade\":[\"ПОВТОРКИ\"]}"
+          "payload": "{\"upgrade\":[\"repeats\"]}"
         },
         "color": "primary"
       }
@@ -455,22 +459,7 @@ main:
   nocards:
     message: >
       У вас нет таких карт
-    keyboard: '
-    {
-  "buttons": [
-    [
-      {
-        "action": {
-          "type": "text",
-          "label": "Назад",
-          "payload": "{\"dialog\":\"profile\"}"
-        },
-        "color": "primary"
-      }
-    ]
-  ]
-}   
-    ' 
+
   poolcards:
     message: >
       Вам были выданы следующие карты
@@ -627,7 +616,6 @@ main:
 
       Осталось боев: {battles}
 
-
   shop_inline:
     keyboard: '
 {
@@ -718,6 +706,179 @@ main:
 
 
       Ваш баланс: {balance}
+
+  varenik:
+    message: >
+      Все это время Саня просто пинал хуи
+
+  leha: 
+    message: >
+      400 тонн золота грезят о нем
+
+      Создал карты и механики. PR менеджер
+
+  gerych:
+    message: >
+      Если ты создал вселенную, то в ней ты сильнее всех
+
+      Технарь - написал бота и держит сервер с ним
+
+  packs:
+    message: >
+      Ваши паки:
+
+      Обычные: {packs[0]}
+
+      Редкие: {packs[1]}
+
+      Эпические: {packs[2]}
+
+      Рандом: {packs[3]}
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"openPack\": 0}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"openPack\": 1}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"openPack\": 2}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Рандом",
+          "payload": "{\"openPack\": 3}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\": \"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}   
+    '
+  nopack:
+    message: >
+      У вас нет этого пака
+
+  
+  gotPack:
+    message: >
+      Перейти к пакам?
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "К пакам",
+          "payload": "{\"dialog\": \"packs\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\": \"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+
+  packs_inline:
+    message: >
+      Ваши паки:
+
+      Обычные: {packs[0]}
+
+      Редкие: {packs[1]}
+
+      Эпические: {packs[2]}
+
+      Рандом: {packs[3]}
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"openPack\": 0}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"openPack\": 1}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"openPack\": 2}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Рандом",
+          "payload": "{\"openPack\": 3}"
+        },
+        "color": "primary"
+      }
+    ]
+  ], "inline": true
+}   
+    '
+  kb_placeholder:
+    message: Изыйди, клава
+    keyboard: '{"buttons":[]}'
+
 
 
 

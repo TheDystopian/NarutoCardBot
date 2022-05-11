@@ -21,7 +21,8 @@ class dialog:
             status = self.__messages['status'][data['db']['status']],
             balance = data['db']['balance'],
             scraps = data['db']['scraps'],
-            battles = data['db']['battles']
+            battles = data['db']['battles'],
+            packs = data['db']['packs']
         ) for a in dialog], 
         'keyboard': self.__messages ['main'][dialog[-1]].get('keyboard'), 
         'peer_id': data['vk'].get('peer_id') if toGroup else None

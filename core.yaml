@@ -105,8 +105,48 @@ commands:
       - bot
     activateOn:
       - ШАНС
-
-
+  destroy:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - РАЗОРВАТЬ
+      - РАЗР
+  varenik:
+    permittedIn:
+      - bot
+    activateOn:
+      - ВАРЕНИК
+      - АМИРХАН
+  varenik:
+    permittedIn:
+      - bot
+    activateOn:
+      - ВАРЕНИК
+      - АМИРХАН
+  leha:
+    permittedIn:
+      - bot
+    activateOn:
+      - ЛЕХА
+  gerych:
+    permittedIn:
+      - bot
+    activateOn:
+      - ГЕРЫЧ
+      - ГЕРМАН
+  pack_dialog:
+    permittedIn:
+      - chat
+      - bot
+    activateOn:
+      - ПАКИ
+  removeKB:
+    permittedIn:
+      - chat
+    activateOn:
+      - УБРАТЬКЛАВУ
+  
 
 subOptions:
   rarity:
@@ -130,6 +170,15 @@ subOptions:
     activateOn:
       - БАЛАНС
       - БАЛ
+  pack:
+    activateOn:
+      - ПАК
+  cards:
+    activateOn:
+      - КАРТА
+      - К
+
+  
 
 
   

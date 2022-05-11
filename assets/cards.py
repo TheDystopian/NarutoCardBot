@@ -56,3 +56,6 @@ class cards:
             'attachment': self.__cards['cards'][i['id']]['photo'][f'lvl{i["level"]}']
         } for i in carddata]
         return returnable if sortByRarity is None else sorted(returnable, key=itemgetter('rarity'))
+
+    def allCards(self):
+        return self.__cards['cards']

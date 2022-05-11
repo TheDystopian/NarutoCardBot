@@ -14,27 +14,29 @@ class core:
 
     def core(self,data,vk,dialogs,card,db,isChat):
         def dailyEvent():
-            if time() // 86400 < data['db']['day'] or time() % 86400 // 3600 < 9: return
+            if time() // 86400 < data['db']['day'] or time() % 86400 // 3600 < 9: return False
 
             data['db']['battles'] = self.__config['userLevels'][data['db']['status']]['battles']
             data['db']['loses'] = data['db']['wins'] = data['db']['judge'] = 0
 
             data['db']['day'] = int(time() // 86400 + 1)
 
+            return True
+
         def textRecognition(message):
-            if len(message) < 2: return None
+            if len(message) < 2 or not message[0] in self.__config['commandCall']: return None
 
             payload = {}
 
-            if not message[0] in self.__config['commandCall']: return None
+            for wordNum,command in enumerate(message[1:].upper().split()):
+                if not wordNum and not command in self.__allPhrases: return None
 
-            for i in message[1:].upper().split():
-                if i in self.__allPhrases:
-                    foundKey = next((k for k, v in self.__config['commands'].items() if i in v['activateOn']))
+                if not wordNum:
+                    foundKey = next((k for k, v in self.__config['commands'].items() if command in v['activateOn']))
 
                     if (isChat and 'chat' not in self.__config['commands'][foundKey]['permittedIn']) or \
                         (not isChat and 'bot' not in self.__config['commands'][foundKey]['permittedIn']):
-                            vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedHere']})
+                            vk.send({'pe09er_id': data['vk']['peer_id'], 'message': self.__config['notPermittedHere']})
                             return None
 
                     if 'admins' in self.__config['commands'][foundKey]['permittedIn'] and not vk.isAdmin(data['vk']['peer_id'], data['vk']['user']):
@@ -42,18 +44,18 @@ class core:
                         return None
 
                     payload[foundKey] = []
-                elif i in self.__allSubPhrases:
+                elif command in self.__allSubPhrases:
                     if not payload: continue
-                    foundKey = next((k for k, v in self.__config['subOptions'].items() if i in v['activateOn']))
+                    foundKey = next((k for k, v in self.__config['subOptions'].items() if command in v['activateOn']))
                     payload[list(payload.keys())[-1]] = {foundKey: []}
                 else:
                     if not payload: continue
-                    if not isinstance(list(payload.keys())[-1],dict):
-                        payload[list(payload.keys())[-1]].append(i)
-                    else: 
+                    if not isinstance(list(payload.values())[-1],dict):
+                        payload[list(payload.keys())[-1]].append(command)
+                    else:
                         items = list(payload.items())[-1]
-                        payload[items[0]][list(items[1].keys())[-1]].append(i)
-                    
+                        payload[items[0]][list(items[1].keys())[-1]].append(command)
+
             return payload
 
         def payloadHandle(payload):
@@ -115,7 +117,6 @@ class core:
                 
                 elif not isinstance(what,list): return
 
-
                 elif what[0].isdigit() and int(what[0]) in range(1, len(self.__config['scrapCosts']) + 1):
                     if data['db']['scraps'] < self.__config['scrapCosts'][int(what[0]) - 1]: 
                         vk.send(dialogs.getDialog(data,'notenough', toGroup = True))
@@ -162,10 +163,11 @@ class core:
                     vk.send(dialogs.getDialog(data,'notenough', toGroup = True))
                     return False
                 
-                data['db']['cards'].append(card.getCardByRarity(chances = self.__config['packSettings'][pack]['rarities']))
                 data['db']['balance'] -= self.__config['packSettings'][pack]['price']
+                data['db']['packs'][pack] += 1
 
-                vk.send(dialogs.getDialog(data,'purchase',card, toGroup = True))
+                vk.send(dialogs.getDialog(data,'gotPack'))
+
                 return True
 
             def showCards(which):
@@ -224,6 +226,27 @@ class core:
                 elif "scraps" in what:
                     thatUser['scraps'] += int(what['scraps'][0]) 
 
+                elif "pack" in what and what['pack'][0].isdigit() and int(what['pack'][0]) < len(self.__config['packSettings']):
+                    thatUser['packs'][int(what['pack'][0])] += int(what['pack'][1]) if len(what['pack']) > 1 and what['pack'][1].isdigit() else 1
+
+                elif "cards" in what:
+                    if not what: return
+
+
+                    foundCardLevel = 1
+                    if what['cards'][-1].isdigit() and int(what['cards'][-1]) in range(1,self.__config['maxLevel']+1):
+                        foundCardLevel, what['cards'] = int(what['cards'][-1]), what['cards'][:-1]
+
+                    foundCardID = next( ( cardID for cardID,cd in enumerate(card.allCards()) if cd['name'].upper().find(" ".join(what['cards'])) != -1), None)
+
+                    if foundCardID is None: 
+                        vk.send({'peer_id':data['vk']['peer_id'], 'message': 'Такой карты нет'})
+                        return
+
+                    thatUser['cards'].append({'id':foundCardID, 'level': foundCardLevel})                
+                else: return False
+
+
                 db.editDB(thatUser)
 
                 return False
@@ -250,6 +273,29 @@ class core:
                     if thatUser['loses'] == 5: thatUser['balance'] -= 20
                     thatUser['loses'] -= 1
 
+                elif "pack" in what and what['pack'][0].isdigit() and int(what['pack'][0]) < len(self.__config['packSettings']):
+                    thatUser['packs'][int(what['pack'][0])] -= int(what['pack'][1]) if len(what['pack']) > 1 and what['pack'][1].isdigit() else 1
+
+                elif "cards" in what:
+                    if not what: return
+
+                    selectedCardLevel = 1
+                    if what['cards'][-1].isdigit() and int(what['cards'][-1]) in range(1,self.__config['maxLevel']+1):
+                        selectedCardLevel, what['cards'] = int(what['cards'][-1]), what['cards'][:-1]
+
+
+                    foundCardID = next( ( cardID for cardID,(cdDB, cdDT) in enumerate(zip(thatUser['cards'], card.getOwnedCards(thatUser['cards']))) if 
+                        cdDB['level'] == selectedCardLevel and
+                    cdDT['name'].upper().find(" ".join(what['cards'])) != -1), None)
+
+                    if foundCardID is None: 
+                        vk.send({'peer_id':data['vk']['peer_id'], 'message': 'У него нет такой карты'})
+                        return
+
+                    thatUser['cards'].pop(foundCardID)
+
+                else: return False
+
                 db.editDB(thatUser)
 
                 return False
@@ -263,7 +309,9 @@ class core:
                return True
 
             def profile(_):
-                if data['vk']['reply_id'] is None or data['vk']['reply_id'] < 1:
+                if not isChat:
+                    vk.send(dialogs.getDialog(data, 'profile', toGroup=True))
+                elif data['vk']['reply_id'] is None or data['vk']['reply_id'] < 1:
                     vk.send(dialogs.getDialog(data, 'profile_inline', toGroup=True))
                 else:
                     dbUser = db.getDataFromDB(data['vk']['reply_id'])
@@ -283,9 +331,49 @@ class core:
 
                 vk.send({'peer_id': data['vk'].get('peer_id'), 'message': 'Успешно' if randrange(1,101) <= int(chance[0]) else 'Не успешно' })
 
+            def destroy(what):
+                if not data['db']['cards']:
+                    vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
+                    return False
+
+                cds = card.getOwnedCards(data['db']['cards'])
+
+                i,n = next( ( (i,n) for i,n in enumerate(cds) if n['name'].upper().find(" ".join(what)) != -1), (None, None)) if isinstance(what, list) \
+                else next( ( (i,n) for i,n in enumerate(cds) if n['rarity'] == int(what['rarity'][0]) ), (None, None)) if "rarity" in what and what['rarity'][0].isdigit() \
+                    else (None,None)
+
+                if (i,n) == (None,None):
+                    vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
+                    return False
+
+                data['db']['cards'].pop(i)
+                data['db']['scraps'] += self.__config['breakPrice'][n['rarity'] - 1]
+
+                vk.send({'peer_id': data['vk']['peer_id'], 'message': f'Разорвана карта {n["name"]}. Вы получаете {self.__config["breakPrice"][n["rarity"] - 1]} обрывков'})
+                    
+                return True
+
+            def openPack(which):
+                if data['db']['packs'][which] < 1:
+                    vk.send(dialogs.getDialog(data,'nopack', toGroup=True))
+                    return
+
+                data['db']['packs'][which] -= 1
+
+                data['db']['cards'].append(card.getCardByRarity(chances = self.__config['packSettings'][which]['rarities']))
+
+                vk.send(dialogs.getDialog(data,'purchase',card, toGroup = True))
+
+                return True
+
             PAYLOADCONVERT = {
                 'tutorial': {'dialog':'tutorial'},
-                'shop': {'dialog':'shop_inline'}
+                'shop': {'dialog':'shop_inline'},
+                'varenik': {'dialog': 'varenik'},
+                'leha': {'dialog': 'leha'},
+                'gerych': {'dialog': 'gerych'},
+                'pack_dialog': {'dialog':'packs_inline'},
+                'removeKB':{'dialog':'kb_placeholder'}
             }
 
             for key in payload:
@@ -298,10 +386,10 @@ class core:
 
             return True
 
-        dailyEvent()
+        daily = dailyEvent()
         payload = data['vk']['payload']
         if payload is None:
             payload = textRecognition(data['vk']['text'])
-            if payload is None: return False
+            if not payload: return daily
 
         return payloadHandle(payload)

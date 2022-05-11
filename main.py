@@ -28,18 +28,24 @@ def bot_main():
     try:
         for data in vk.wait():
             if data['user'] < 1: continue
+
+
             data = {'vk':data, 'db': db.getDataFromDB(data['user'])}
-            logs.info(f'GET: {data}')
 
             if data['db'] is None:
+                if data['vk']['peer_id'] != data['vk']['user']: continue
+
                 vk.send(dialogs.getDialog(data,'greeting',card))
                 db.addID(data['vk']['user'])
                 logs.info(f'NEW USER: {data["vk"]["user"]}')
                 continue
 
+
+            logs.info(f'GET: {data}')
+
             if coreCtl.core(data,vk,dialogs,card,db,data['vk']['peer_id'] != data['vk']['user']):
+                logs.info(f'WRITE TO DB: {data["db"]}')
                 db.editDB(data['db'])
-                logs.info(f'WRITE: {data}')
 
     except Exception as e:
         logs.error(f"REASON: {e}, TRACEBACK: {format_exc()}, DATA: {data}. RESTARTING")

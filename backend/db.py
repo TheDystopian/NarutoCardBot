@@ -1,3 +1,4 @@
+from cmath import isinf
 import psycopg,yaml
 from os.path import dirname,join
 
@@ -30,10 +31,22 @@ class DB:
     def getDataFromDB(self, user):
         return self.__composeDictionary(self.__DBColumns, self.__DBCursor.execute(f"SELECT {','.join(self.__DBColumns)} from userdata WHERE id = {user}").fetchone())
 
+
+
     def editDB(self,newData):
-        self.__DBCursor.execute(f"UPDATE userdata set { ' ,'.join([f'{key} = { val if isinstance(val,int) else chr(39) + str(val).replace(chr(39),chr(34)) + chr(39)}' for key, val in newData.items()]) } where ID = {newData['id']};")
+        self.__DBCursor.execute(f"UPDATE userdata set { ' ,'.join([f'{key} = {conv(val)}' for key, val in newData.items()]) } where ID = {newData['id']};")
         self.__DB.commit()
 
     def __del__(self):
         self.__DBCursor.close()
         self.__DB.close()
+
+
+def conv(that):
+    if isinstance(that, int): return str(that)
+    if isinstance(that, list):
+        if not that or isinstance(that[0],dict):
+            return f"'{str(that).replace(chr(39),chr(34))}'"
+        return f"'{{ {' ,'.join(map(str,that))} }}'"
+    return f"'{that}'"
+
