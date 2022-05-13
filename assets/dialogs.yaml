@@ -367,7 +367,7 @@ main:
         "action": {
           "type": "text",
           "label": "Прокачать все повторки",
-          "payload": "{\"upgrade\":[\"repeats\"]}"
+          "payload": "{\"upgrade\":[]}"
         },
         "color": "primary"
       }

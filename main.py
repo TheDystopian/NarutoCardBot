@@ -22,24 +22,22 @@ def bot_main():
     coreCtl = core('core.yaml')
     
     from traceback import format_exc
+    import asyncio
 
-    data = dict()
-
-    try:
-        for data in vk.wait():
-            if data['user'] < 1: continue
+    async def botExec(data):
+        try:
+            if data['user'] < 1: return
 
 
             data = {'vk':data, 'db': db.getDataFromDB(data['user'])}
 
             if data['db'] is None:
-                if data['vk']['peer_id'] != data['vk']['user']: continue
+                if data['vk']['peer_id'] != data['vk']['user']: return
 
                 vk.send(dialogs.getDialog(data,'greeting',card))
                 db.addID(data['vk']['user'])
                 logs.info(f'NEW USER: {data["vk"]["user"]}')
-                continue
-
+                return
 
             logs.info(f'GET: {data}')
 
@@ -47,9 +45,18 @@ def bot_main():
                 logs.info(f'WRITE TO DB: {data["db"]}')
                 db.editDB(data['db'])
 
+        except Exception as e:
+            logs.error(f"REASON: {e}, TRACEBACK: {format_exc()}, DATA: {data}")
+            vk.sendToAdmins(f'Directed by:\n{e}\n\nExecutive producer:\n{format_exc()}\nExecutive Producer\n{data}')
+    
+    try:
+        for data in vk.wait():
+            asyncio.run(botExec(data))
+
     except Exception as e:
-        logs.error(f"REASON: {e}, TRACEBACK: {format_exc()}, DATA: {data}. RESTARTING")
-        vk.sendToAdmins(f'Directed by:\n{e}\n\nExecutive producer:\n{format_exc()}\nExecutive Producer\n{data}')
+        logs.critical(f'ERROR IN CLASSES. \nTRACEBACK: {format_exc()}')
+        vk.sendToAdmins(f'Directed by:\n{e}\n\nExecutive producer:\n{format_exc()}')
+
 
 
 if __name__ == '__main__':

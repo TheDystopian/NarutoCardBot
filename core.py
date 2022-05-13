@@ -99,56 +99,55 @@ class core:
                 return True
 
             def upgrade(what):
-                if not what: return False
                 whichCards = card.getOwnedCards(data['db']['cards'])
 
                 upgradedCards = []
 
-                if "repeats" in what:
+                if not what:
                     for i, c in zip(whichCards, data['db']['cards']):
-                        if data['db']['cards'].count(c) < self.__config['repeatsNeeded'][i['rarity'] - 1] or c['level'] >= self.__config['maxLevel']: continue
+                        if data['db']['cards'].count(c) < self.__config['repeatsNeeded'][str(i['rarity'])] or c['level'] >= i['maxlevel']: continue
 
-                        duplicates = [j for j, v in enumerate(data['db']['cards']) if v == c][:self.__config['repeatsNeeded'][i['rarity'] - 1]]
-                        if not len(duplicates): continue
+                        duplicates = [j for j, v in enumerate(data['db']['cards']) if v == c][:self.__config['repeatsNeeded'][str(i['rarity'])]]
+                        if not duplicates: continue
 
                         upgradedCards.append(duplicates[0])
-                        [data['db']['cards'].pop(i) and whichCards.pop(i) for i in duplicates[1:]]
+                        [data['db']['cards'].pop(i) and whichCards.pop(i) for i in reversed(duplicates[1:])]
                         data['db']['cards'][duplicates[0]]['level'] += 1                     
                 
                 elif not isinstance(what,list): return
 
-                elif what[0].isdigit() and int(what[0]) in range(1, len(self.__config['scrapCosts']) + 1):
-                    if data['db']['scraps'] < self.__config['scrapCosts'][int(what[0]) - 1]: 
+                elif what[0].isdigit():
+                    if data['db']['scraps'] < self.__config['scrapCosts'][what[0]]: 
                         vk.send(dialogs.getDialog(data,'notenough', toGroup = True))
                         return False
                     
-                    upgradeable = [i for i, v in enumerate(whichCards) if v['rarity'] == int(what[0]) and data['db']['cards'][i]['level'] < self.__config['maxLevel']]
+                    upgradeable = [(i, v) for i, v in enumerate(whichCards) if v['rarity'] == int(what[0]) and data['db']['cards'][i]['level'] < v['maxlevel']]
 
-                    if not len(upgradeable):
+                    if not upgradeable:
                         vk.send(dialogs.getDialog(data,'upgrade_fail', toGroup = True))
                         return False
 
                     selectedCard = choice(upgradeable)
-                    upgradedCards.append(selectedCard)
+                    upgradedCards.append(selectedCard[0])
 
-                    data['db']['scraps'] -= self.__config['scrapCosts'][int(what[0]) - 1]
-                    data['db']['cards'][selectedCard]['level'] += 1
+                    data['db']['scraps'] -= self.__config['scrapCosts'][str(selectedCard[1]['rarity'])]
+                    data['db']['cards'][selectedCard[0]]['level'] += 1
 
                 else:
-                    i,n = next( ( (i,n) for i,n in enumerate(whichCards) if n['name'].upper().find(" ".join(what)) != -1 and data['db']['cards'][i]['level'] < self.__config['maxLevel']), (None, None))
+                    i,n = next( ( (i,n) for i,n in enumerate(whichCards) if n['name'].upper().find(" ".join(what)) != -1 and data['db']['cards'][i]['level'] < n['maxlevel']), (None, None))
 
                     if i is None:
                         vk.send(dialogs.getDialog(data,'nocards'))
                         return False
 
-                    if data['db']['scraps'] < self.__config['scrapCosts'][n['rarity'] - 1]: 
+                    if data['db']['scraps'] < self.__config['scrapCosts'][str(n['rarity'])]:
                         vk.send(dialogs.getDialog(data,'notenough'))
                         return False
 
                     upgradedCards.append(i)
 
-                    data['db']['scraps'] -= self.__config['scrapCosts'][n['rarity'] - 1]                            
-                    data['db']['cards'][i]['level'] += 1 
+                    data['db']['scraps'] -= self.__config['scrapCosts'][str(n['rarity'])]
+                    data['db']['cards'][i]['level'] += 1
                 
                 vk.send(dialogs.getDialog(data,'upgrade_fail' if not len(upgradedCards) else'upgraded' if len(upgradedCards) == 1 else 'upgraded_multi', card, upgradedCards, toGroup = True))
                 return True
@@ -234,10 +233,10 @@ class core:
 
 
                     foundCardLevel = 1
-                    if what['cards'][-1].isdigit() and int(what['cards'][-1]) in range(1,self.__config['maxLevel']+1):
+                    if what['cards'][-1].isdigit():
                         foundCardLevel, what['cards'] = int(what['cards'][-1]), what['cards'][:-1]
 
-                    foundCardID = next( ( cardID for cardID,cd in enumerate(card.allCards()) if cd['name'].upper().find(" ".join(what['cards'])) != -1), None)
+                    foundCardID = next( ( cardID for cardID,cd in enumerate(card.allCards()) if foundCardLevel <= len(cd['photo']) and cd['name'].upper().find(" ".join(what['cards'])) != -1), None)
 
                     if foundCardID is None: 
                         vk.send({'peer_id':data['vk']['peer_id'], 'message': 'Такой карты нет'})
@@ -280,7 +279,7 @@ class core:
                     if not what: return
 
                     selectedCardLevel = 1
-                    if what['cards'][-1].isdigit() and int(what['cards'][-1]) in range(1,self.__config['maxLevel']+1):
+                    if what['cards'][-1].isdigit():
                         selectedCardLevel, what['cards'] = int(what['cards'][-1]), what['cards'][:-1]
 
 

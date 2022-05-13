@@ -9,11 +9,12 @@ class cards:
             self.__cards = safe_load(cfg)
 
         self.__pooledCards = [i for i in self.__cards['cards'] if 'pool' in i]
+        self.__droppedCards = [id for id,card in enumerate(self.__cards['cards']) if card['rarity'] > 0]
 
     def getCardByRarity(self, cards = None, chances = {}):
         if '0' in chances:
             return {
-                'id': randint(0,len(self.__cards['cards']) - 1),
+                'id': choice(self.__droppedCards),
                 'level': 1
             }
 
@@ -22,11 +23,12 @@ class cards:
         rarities = {str(i.get('rarity')) for i in cards} if cards is not None else set(chances)
         if cards is None: cards = self.__cards['cards']
 
-        # first filter 
+        # arrange to get correct rarities
         chances = {k: v for k,v in chances.items() if k in rarities}
 
         if '1' in rarities and not '1' in chances: chances['1'] = 100 - sum(chances.values())
 
+        # get probability
         prob = randint(1,sum(chances.values()))
 
         # then correct probabilities
@@ -53,7 +55,8 @@ class cards:
         returnable = [{
             'name': self.__cards['cards'][i['id']]['name'],
             'rarity': self.__cards['cards'][i['id']]['rarity'],
-            'attachment': self.__cards['cards'][i['id']]['photo'][f'lvl{i["level"]}']
+            'attachment': self.__cards['cards'][i['id']]['photo'][f'lvl{i["level"]}'],
+            'maxlevel': len(self.__cards['cards'][i['id']]['photo'])
         } for i in carddata]
         return returnable if sortByRarity is None else sorted(returnable, key=itemgetter('rarity'))
 
