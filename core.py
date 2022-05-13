@@ -36,7 +36,7 @@ class core:
 
                     if (isChat and 'chat' not in self.__config['commands'][foundKey]['permittedIn']) or \
                         (not isChat and 'bot' not in self.__config['commands'][foundKey]['permittedIn']):
-                            vk.send({'pe09er_id': data['vk']['peer_id'], 'message': self.__config['notPermittedHere']})
+                            vk.send({'peer_id': data['vk']['peer_id'], 'message': self.__config['notPermittedHere']})
                             return None
 
                     if 'admins' in self.__config['commands'][foundKey]['permittedIn'] and not vk.isAdmin(data['vk']['peer_id'], data['vk']['user']):
@@ -346,9 +346,9 @@ class core:
                     return False
 
                 data['db']['cards'].pop(i)
-                data['db']['scraps'] += self.__config['breakPrice'][n['rarity'] - 1]
+                data['db']['scraps'] += self.__config['breakPrice'][str(n['rarity'])]
 
-                vk.send({'peer_id': data['vk']['peer_id'], 'message': f'Разорвана карта {n["name"]}. Вы получаете {self.__config["breakPrice"][n["rarity"] - 1]} обрывков'})
+                vk.send({'peer_id': data['vk']['peer_id'], 'message': f'Разорвана карта {n["name"]}. Вы получаете {self.__config["breakPrice"][str(n["rarity"])]} обрывков'})
                     
                 return True
 
