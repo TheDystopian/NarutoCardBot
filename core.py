@@ -14,7 +14,7 @@ class core:
 
     def core(self,data,vk,dialogs,card,db,isChat):
         def dailyEvent():
-            if time() // 86400 < data['db']['day'] or time() % 86400 // 3600 < 9: return False
+            if time() // 86400 < data['db']['day'] or (time() // 86400 == data['db']['day'] and time() % 86400 // 3600 < 9): return False
 
             data['db']['battles'] = self.__config['userLevels'][data['db']['status']]['battles']
             data['db']['loses'] = data['db']['wins'] = data['db']['judge'] = 0
@@ -303,9 +303,13 @@ class core:
                 vk.send(dialogs.getDialog(data,choice(['firstPlayer','secondPlayer']), toGroup=True))
 
             def judge(_):
-               data['db']['balance'] += 1
-               if data['db']['judge'] == 10: data['db']['balance'] +=10
-               return True
+                data['db']['balance'] += 1
+                data['db']['judge'] += 1
+                vk.send({'id': data['vk']['user'], 'message': f'Вы получаете 1 монету за судейство'})
+                if not data['db']['judge'] % 10: 
+                    data['db']['balance'] +=10
+                    vk.send({'id': data['vk']['user'], 'message': f'Вы получаете 10 монет за активное судейство'})
+                return True
 
             def profile(_):
                 if not isChat:
@@ -333,17 +337,19 @@ class core:
             def destroy(what):
                 if not data['db']['cards']:
                     vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
-                    return False
+                    return
 
                 cds = card.getOwnedCards(data['db']['cards'])
+                
+                if isinstance(what, list):
+                    i, n = next(((i,n) for i, (c,n) in enumerate(zip(data['db']['cards'], cds)) if n['name'].upper().find(" ".join(what)) != -1 and c['level'] == 1), (None, None))
 
-                i,n = next( ( (i,n) for i,n in enumerate(cds) if n['name'].upper().find(" ".join(what)) != -1), (None, None)) if isinstance(what, list) \
-                else next( ( (i,n) for i,n in enumerate(cds) if n['rarity'] == int(what['rarity'][0]) ), (None, None)) if "rarity" in what and what['rarity'][0].isdigit() \
-                    else (None,None)
+                elif "rarity" in what and what['rarity'][0].lstrip('-').isdecimal():
+                    i, n = next(((i,n) for i,(c,n) in enumerate(zip(data['db']['cards'], cds)) if n['rarity'] == int(what['rarity'][0]) and c['level'] == 1), (None, None))
 
-                if (i,n) == (None,None):
+                if i is None:
                     vk.send(dialogs.getDialog(data,'nocards', toGroup = True))
-                    return False
+                    return
 
                 data['db']['cards'].pop(i)
                 data['db']['scraps'] += self.__config['breakPrice'][str(n['rarity'])]
@@ -392,3 +398,4 @@ class core:
             if not payload: return daily
 
         return payloadHandle(payload)
+

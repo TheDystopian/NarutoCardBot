@@ -18,7 +18,8 @@ class DB:
             port=config["port"]
         )
         self.__DBCursor=self.__DB.cursor()
-        self.__DBColumns=[row[0] for row in self.__DBCursor.execute("select column_name from information_schema.columns where table_name = 'userdata'")]
+        self.__DBCursor.execute("select * from userdata LIMIT 0")
+        self.__DBColumns=[row[0] for row in self.__DBCursor.description]
 
 
     def __composeDictionary(self,keys,data):
