@@ -1,0 +1,1078 @@
+status:
+  - Шиноби
+  - Саннин
+  - Хокаге
+  - Админ
+main:
+  greeting:
+    message: >
+      Приветствую тебя, Шиноби.
+
+
+
+      Добро пожаловать, в мир карточных боёв по культовому аниме "Наруто"
+
+
+
+      Перед началом игры нужно прочитать правила https://vk.com/topic-195428368_41289323
+
+
+
+      Чтобы получить карты нажми на соответствующую кнопку
+
+
+
+      Отлично,ты готов к боям
+      "Карточные бои" проходят в беседе "Рейтинг": https://vk.me/join/AJQ1dxOp2SCBSf48YjoMLume
+
+
+
+      Найти противника ты можешь в беседе "Флуд": https://vk.me/join/AJQ1d2lVthetszYczBAAd7mx
+    keyboard: >
+      {
+      "buttons": [
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Добавить карты",
+          "payload": "[{\"addCardsPool\":[1,2,3]},{\"dialog\":\"profile\"}]"
+        },
+        "color": "primary"
+      }
+      ]
+      ]
+      }
+
+  main:
+    message: "Тест главного сообщения"
+    keyboard: '
+{
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обучение",
+          "payload": "{\"dialog\":\"tutorial\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+        '
+
+  profile:
+    message: >
+      Ваш статус: {status}
+
+      Ваш ранг: {rank}
+
+      Ваш баланс: {balance}
+
+      Количество обрывков: {scraps}
+
+      Осталось боев: {battles}
+      
+    keyboard: >
+      {
+      "buttons": [
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Магазин",
+          "payload": "{\"dialog\":\"shop\"}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Коллекции",
+          "payload": "{\"dialog\":\"collection\"}"
+        },
+        "color": "primary"
+      }
+      ],
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Прокачка",
+          "payload": "{\"dialog\":\"upgrade\"}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Паки",
+          "payload": "{\"dialog\":\"packs\"}"
+        },
+        "color": "primary"
+      }
+      ],
+      [
+      {
+        "action": {
+          "type": "text",
+          "label": "Найти игру",
+          "payload": "{\"dialog\":\"game_search\"}"
+        },
+        "color": "primary"
+      }
+      ]
+      ]
+      }
+
+  shop:
+    message: >
+      Магазин
+
+
+
+      Обычный пак: 100 монет
+
+      Шансы выпадения:
+      
+      85% - обычная
+      
+      15% - редкая
+
+
+
+      Редкий пак: 150 монет
+
+      Шансы выпадения: 
+      
+      5% - обычная
+      
+      85% - редкая
+      
+      10% - эпическая
+
+
+
+      Эпический пак: 200 монет
+
+      Шансы выпадения:
+      
+      92% - эпическая
+      
+      8% - легендарная
+      
+      
+      
+      Рандом пак: 170 монет
+      
+      Шансы выпадения: 
+      
+      Любая карта 1 уровня
+
+
+
+      Ваш баланс: {balance}
+    keyboard: >
+        {
+        "buttons": [
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"getPack\":0}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"getPack\":1}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"getPack\":2}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Случайный",
+          "payload": "{\"getPack\":3}"
+        },
+        "color": "primary"
+        }
+        ],
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+
+  notenough:
+    message: Не хватает средств
+  
+  purchase:
+    message: > 
+      Вам выпала карта {card}
+
+      Поздравляем!
+
+  upgrade:
+    message: >
+      Прокачка карт
+
+      Вы можете улучшить карту за повторки или за обрывки
+      
+      
+      
+      Чтобы прокачать определенную карту за обрывки, напишите ".ап <карта>"
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "За повторки",
+          "payload": "{\"dialog\":\"upgrade_repeat\"}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "За обрывки",
+          "payload": "{\"dialog\":\"upgrade_scraps\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}  
+'
+  upgrade_scraps:
+    message: >
+      Прокачка случайной карты за обрывки
+
+
+
+      Стоимость:
+
+      Обычная - 25 обрывков
+
+      Редкая - 30 обрывков
+
+      Эпическая - 35 обрывков
+
+      Легендарная - 40 обрывков
+
+    keyboard: '
+        {
+        "buttons": [
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "Обычная",
+          "payload": "{\"upgrade\":[\"1\"]}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Редкая",
+          "payload": "{\"upgrade\":[\"2\"]}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Эпическая",
+          "payload": "{\"upgrade\":[\"3\"]}"
+        },
+        "color": "primary"
+        },
+        {
+        "action": {
+          "type": "text",
+          "label": "Легендарная",
+          "payload": "{\"upgrade\":[\"4\"]}"
+        },
+        "color": "primary"
+        }
+        ],
+        [
+        {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+    '
+  upgrade_repeat:
+    message: >
+      Прокачка случайной карты за повторки
+
+
+
+      Стоимость:
+
+      Обычная - 3 повторки
+
+      Редкая - 3 повторки
+
+      Эпическая - 2 повторки
+
+      Легендарная - 2 повторки
+
+    keyboard: '
+{
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Прокачать все повторки",
+          "payload": "{\"upgrade\":[]}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+
+  upgraded:
+    message: >
+      Карта {card} была улучшена
+
+  upgraded_multi:
+    message: >
+      Улучшены карты:
+
+
+
+      {card}  
+
+  upgrade_fail:
+    message: >
+      У вас нет подходящих карт для улучшения
+
+    keyboard: '
+      {
+      "buttons": [
+      [
+        {
+        "action": {
+          "type": "text",F
+          "label": "В профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+    '
+  collection:
+    message: >
+      Выберите уровень
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "1 уровень",
+          "payload": "{\"showCards\":{\"level\": \"1\"}}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "2 уровень",
+          "payload": "{\"showCards\":{\"level\": \"2\"}}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+  nocards:
+    message: >
+      Нет карт
+
+  poolcards:
+    message: >
+      Вам были выданы следующие карты
+
+      {card}
+      
+      
+      
+      Получить их можно в коллекции
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}   
+    '
+
+
+
+  firstPlayer:
+    message: >
+      Ходит первый игрок
+
+  secondPlayer:
+    message: >
+      Ходит второй игрок
+
+  tutorial:
+    message: >
+      ТЕГИ
+
+      Для их ввода нужно использовать один из этих знаков
+
+      . / # !
+
+
+
+
+
+      Победа - обьявить о победе
+
+
+
+      Поражение - обьявить о поражении
+
+
+
+      Судья - обьявить о судействе
+
+
+
+      Флип - Выбор ходящего игрока случайным образом
+
+
+
+      П - Посмотреть профиль
+      
+      	• При ответе на сообщение этим тегом, вы можете посмотреть количество боев у другого игрока
+      	
+      	
+
+      Апгрейд - Улучшить карту 
+
+      • Аргументы
+
+        ■ Нет - Прокачать все карты за повторки
+
+          ■ Стоимости 
+
+          	■ Обычные - 3 повторки
+
+          	■ Редкие - 3 повторки 
+
+          	■ Эпические - 2 повторки 
+
+          	■ Легендарные - 2 повторки 
+
+        ■ Число редкости - прокачать случайную карту выбранной редкости
+
+          ■ Стоимости 
+
+          	■ Обычные (1) - 25 обрывков
+
+          	■ Редкие (2) - 30 обрывков
+
+          	■ Эпические (3) - 35 обрывков
+
+          	■ Легендарные (4) - 40 обрывков 
+
+          ■ Шорткаты - Р, Ред
+
+        ■ Название карты - прокачать выбранную карту
+
+          ■ Стоимости 
+
+          	■ Обычная - 25 обрывков
+
+          	■ Редкая - 30 обрывков
+
+          	■ Эпическая - 35 обрывков
+
+          	■ Легендарная - 40 обрывков
+
+      Карта - Посмотреть карты
+
+      • Аргументы
+
+        ■ Нет - Показать все имеющиеся карты 
+
+        ■ Уровень - Показать карты выбранного уровня
+
+        	■ Шорткаты - Ур
+
+        ■ Редкость - показать карты выбранной редкости
+
+        	■ Редкости
+
+        		■ Обычная - 1
+
+        		■ Редкая - 2
+
+         		■ Эпическая - 3
+
+         		■ Легендарная - 4
+
+        	■ Шорткаты - Р, Ред
+          
+        ■ Название карты - показать выбранную карту
+
+
+
+      Магазин - Магазин карт
+
+
+
+      Разорвать - разорвать карту, чтобы получить обрывки
+      
+      	• Чтобы разорвать карту определенной редкости, введите число редкости, а определенную карту - введите ее название
+      	
+      	• При разрыве карты вы получаете
+        
+            ■ За обычную - 5 обрывков
+
+            ■ За редкую - 8 обрывков
+
+            ■ За эпическую - 15 обрывков
+
+            ■ За легендарную - 25 обрывков
+
+
+      Паки - меню с паками
+
+      	
+
+  profile_inline:
+    message: >
+      Ваш статус: {status}
+
+      Ваш ранг: {rank}
+
+      Ваш баланс: {balance}
+
+      Количество обрывков: {scraps}
+
+      Осталось боев: {battles}
+
+  profile_inline_otheruser:
+    message: >
+      Его статус: {status}
+
+      Его ранг: {rank}
+
+      Осталось боев: {battles}
+
+  shop_inline:
+    keyboard: '
+{
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"getPack\":0}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"getPack\":1}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"getPack\":2}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Случайный",
+          "payload": "{\"getPack\":3}"
+        },
+        "color": "primary"
+      }
+    ]
+  ],
+  "inline": true
+}
+    '
+    message: >
+      Магазин
+
+
+
+      Обычный пак: 100 монет
+
+      Шансы выпадения:
+      
+      85% - обычная
+      
+      15% - редкая
+
+
+
+      Редкий пак: 150 монет
+
+      Шансы выпадения: 
+      
+      5% - обычная
+      
+      85% - редкая
+      
+      10% - эпическая
+
+
+
+      Эпический пак: 200 монет
+
+      Шансы выпадения:
+      
+      92% - эпическая
+      
+      8% - легендарная
+      
+      
+      
+      Рандом пак: 170 монет
+      
+      Шансы выпадения: 
+      
+      Любая карта 1 уровня
+
+
+
+      Ваш баланс: {balance}
+
+  varenik:
+    message: >
+      Все это время Саня просто пинал хуи
+
+  leha: 
+    message: >
+      400 тонн золота грезят о нем
+
+      Создал карты и механики. PR менеджер
+
+  gerych:
+    message: >
+      Если ты создал вселенную, то в ней ты сильнее всех
+
+      Технарь - написал бота и держит сервер с ним
+
+  packs:
+    message: >
+      Ваши паки:
+
+      Обычные: {packs[0]}
+
+      Редкие: {packs[1]}
+
+      Эпические: {packs[2]}
+
+      Рандом: {packs[3]}
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"openPack\": 0}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"openPack\": 1}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"openPack\": 2}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Рандом",
+          "payload": "{\"openPack\": 3}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\": \"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}   
+    '
+  nopack:
+    message: >
+      У вас нет этого пака
+
+  
+  gotPack:
+    message: >
+      Перейти к пакам?
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "К пакам",
+          "payload": "{\"dialog\": \"packs\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "В магазин",
+          "payload": "{\"dialog\": \"shop\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\": \"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+
+  packs_inline:
+    message: >
+      Ваши паки:
+
+      Обычные: {packs[0]}
+
+      Редкие: {packs[1]}
+
+      Эпические: {packs[2]}
+
+      Рандом: {packs[3]}
+
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Обычный",
+          "payload": "{\"openPack\": 0}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Редкий",
+          "payload": "{\"openPack\": 1}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Эпический",
+          "payload": "{\"openPack\": 2}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Рандом",
+          "payload": "{\"openPack\": 3}"
+        },
+        "color": "primary"
+      }
+    ]
+  ], "inline": true
+}   
+    '
+  kb_placeholder:
+    message: Изыйди, клава
+    keyboard: '{"buttons":[]}'
+
+  find_lobby:
+    message: Идет поиск лобби. Пожалуйста подождите
+    keyboard: '
+    {
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Остановить поиск",
+          "payload": "{\"game\":\"stop\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+
+  cancel_search:
+    message: >
+      Поиск лобби отменен
+
+    keyboard: '
+      {
+      "buttons": [
+      [
+        {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+    '
+  game_search:
+    message: >
+      Выберите вашу роль
+
+    keyboard: '
+{
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Игрок",
+          "payload": "{\"game\":\"player\"}"
+        },
+        "color": "primary"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Судья",
+          "payload": "{\"game\":\"judge\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Любая",
+          "payload": "{\"game\":\"random\"}"
+        },
+        "color": "primary"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Назад",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+  nobattles:
+    message: >
+      У вас нет боев. Вы сможете играть снова завтра после 12:00 по МСК
+
+    keyboard: '
+      {
+      "buttons": [
+      [
+        {
+        "action": {
+          "type": "text",
+          "label": "В профиль",
+          "payload": "{\"dialog\":\"profile\"}"
+        },
+        "color": "primary"
+        }
+        ]
+        ]
+        }
+    '
+  nouser:
+    message: >
+      Данного пользователя нет в базе данных. 
+
+  dialogError:
+    message: >
+      Ой, а такого диалога нет...
+
+  lobbyReady:
+    message: >
+      Лобби в сборе! Нажмите "Готов", чтобы подтвердить свою готовность
+    keyboard: '
+{
+  "one_time": true,
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "callback",
+          "label": "Готов",
+          "payload": "{\"game\": \"ready\"}"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
+    '
+  
+  lobbyActive:
+    message:
+      Все готовы! Можете начинать игру
+
+  AFKcomp:
+    message: >
+      Один из игроков не был готов, поэтому вам были даны монеты
+
+  AFKpun:
+    message: >
+      Вы задерживали игроков, которые хотели поиграть, поэтому у вас отняли часть монет
+
+
+

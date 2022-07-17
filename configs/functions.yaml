@@ -1,0 +1,86 @@
+userLevels:
+  - 
+    battles: 5
+    winScraps: 3
+    winBalance: 10
+    loseBalance: 5
+  - 
+    battles: 6
+    winScraps: 3
+    winBalance: 10
+    loseBalance: 10
+  - 
+    battles: 7
+    winScraps: 3
+    winBalance: 15
+    loseBalance: 10
+  - 
+    battles: 7
+    winScraps: 3
+    winBalance: 15
+    loseBalance: 10
+  - 
+    battles: 32767
+    winScraps: 5000
+    winBalance: 10000
+    loseBalance: 10000
+
+packSettings:
+  - 
+    price: 100
+    rarities:
+      '2': 15
+  - 
+    price: 150
+    rarities:
+      '2': 85
+      '3': 10
+  - 
+    price: 200
+    rarities:
+      '3': 92
+      '4': 8
+  - 
+    price: 170
+    rarities:
+      '0'
+
+scrapCosts:
+  '-1': 65
+  '1': 25
+  '2': 30
+  '3': 35
+  '4': 40
+
+repeatsNeeded:
+  '-1': 2
+  '1': 3
+  '2': 3
+  '3': 2
+  '4': 2
+
+breakPrice:
+  '1': 5
+  '2': 8
+  '3': 15
+  '4': 25
+  '5': 25
+  '-1': 50
+
+defaultPremium: 7
+minimumCards: 3
+
+
+
+
+readyWait: 120
+
+
+
+
+
+
+
+AFK:
+  compensate: 5
+  punish: 5
