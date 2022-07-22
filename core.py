@@ -31,6 +31,8 @@ class core:
         self._db = parent._db
         self._dialogs = parent._dialogs
         self._card = parent._card
+        self._rank = parent._rank
+
 
         self._game = lobbies(self)
         self._func = functionData(self)
@@ -148,8 +150,9 @@ class core:
                     payload[index] = PAYLOADCONVERT[list(func.keys())[0]]
 
             func = generalFunctions(self._func, data,payload)
-
-            self._db.editDB(data["db"])
+            
+            if func.editDB:
+                self._db.editDB(data["db"])
 
         def greeting():
             dataNew = {"vk": data, "db": self._db.getDataFromDB(data["user"])}

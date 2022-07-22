@@ -32,9 +32,8 @@ class VK:
                         "messages.send",
                         {
                             "attachment": atch,
-                            "user_id": sendable.get("id"),
                             "random_id": get_random_id(),
-                            "peer_ids": sendable.get("peer_id"),
+                            "peer_ids": sendable.get("id",''),
                             "message": sendable.get("message"),
                         },
                     )
@@ -45,9 +44,8 @@ class VK:
                     "messages.send",
                     {
                         "attachment": ",".join(attachments),
-                        "user_id": sendable.get("id"),
                         "random_id": get_random_id(),
-                        "peer_ids": sendable.get("peer_id"),
+                        "peer_ids": sendable.get("id",''),
                         "message": sendable.get("message"),
                     },
                 )
@@ -61,10 +59,9 @@ class VK:
                     "messages.send",
                     {
                         "message": msg,
-                        "user_id": sendable.get("id"),
                         "random_id": get_random_id(),
                         "keyboard": sendable.get("keyboard"),
-                        "peer_ids": sendable.get("peer_id"),
+                        "peer_ids": sendable.get("id"),
                     },
                 )
 

@@ -1,29 +1,71 @@
-userLevels:
-  - 
-    battles: 5
-    winScraps: 3
-    winBalance: 10
-    loseBalance: 5
-  - 
-    battles: 6
-    winScraps: 3
-    winBalance: 10
-    loseBalance: 10
-  - 
-    battles: 7
-    winScraps: 3
-    winBalance: 15
-    loseBalance: 10
-  - 
-    battles: 7
-    winScraps: 3
-    winBalance: 15
-    loseBalance: 10
-  - 
-    battles: 32767
-    winScraps: 5000
-    winBalance: 10000
-    loseBalance: 10000
+battle:
+  count:
+    - 5
+    - 6
+    - 7
+    - 32767
+
+  win:
+    -
+      balance: 10
+      scraps: 3
+    -
+      balance: 10
+      scraps: 3
+    -
+      balance: 15
+      scraps: 3
+    -
+      balance: 10000
+      scraps: 5000 
+
+  lose:
+    -
+      balance: 5
+    -
+      balance: 10
+    -
+      balance: 10
+    -
+      balance: 10000 
+
+streak:
+  count:
+    win:
+      - 5
+      - 5
+      - 5
+      - 5
+
+    lose:
+      - 5
+      - 5
+      - 5
+      - 5
+
+  reward:
+    win:
+      -
+        balance: 20
+      -
+        balance: 20
+      -
+        balance: 20
+      -
+        balance: 20
+
+    lose:
+      -
+        scraps: 5
+      -
+        scraps: 5
+      -
+        scraps: 5
+      -
+        scraps: 5
+
+
+
 
 packSettings:
   - 
@@ -45,19 +87,40 @@ packSettings:
     rarities:
       '0'
 
-scrapCosts:
-  '-1': 65
-  '1': 25
-  '2': 30
-  '3': 35
-  '4': 40
 
-repeatsNeeded:
-  '-1': 2
-  '1': 3
-  '2': 3
-  '3': 2
-  '4': 2
+upgrade: 
+  scrapCosts:
+    # Formula
+    #
+    # defaultPrice + rarityRatio*(level^dafaultPower)
+
+    defaultPrice: 20
+
+    defaultPower: 1.585
+
+    rarityRatios:
+      '-1': 45
+      '1': 5
+      '2': 10
+      '3': 15
+      '4': 20
+
+  repeatsNeeded:
+    '-1': 
+      - 2
+      - 2
+    '1': 
+      - 3
+      - 2
+    '2': 
+    - 3
+    - 2
+    '3': 
+      - 2
+      - 2
+    '4': 
+      - 2
+      - 2
 
 breakPrice:
   '1': 5

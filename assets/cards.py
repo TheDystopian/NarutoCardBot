@@ -1,7 +1,7 @@
 from random import choice, randint
 from operator import itemgetter
 from os.path import dirname, join
-
+from types import NoneType
 
 class cards:
     def __init__(self, file):
@@ -85,18 +85,21 @@ class cards:
         # str is for json compatibility
         return [self.getCardByRarity(a) for a in poolCont]
 
-    def getOwnedCards(self, carddata: list, *, select: int|slice = None, sortByRarity: bool=None):
-        if not carddata: return []
-        selectedCards = carddata if select is None else carddata[select]
+    def getOwnedCards(self, carddata: list, *, select: int|list = None, sortByRarity: bool=None):
+        if not isinstance(select, (list, NoneType)): select = [select]
+        selectedCards = carddata if select is None else itemgetter(*select)(carddata) 
         if not isinstance(selectedCards, list): selectedCards = [selectedCards]
         returnable = [
             {
                 "name": self.__cards["cards"][i["id"]]["name"],
                 "rarity": self.__cards["cards"][i["id"]]["rarity"],
-                "attachment": self.__cards["cards"][i["id"]]["photo"][
-                    f'lvl{i["level"]}'
-                ],
+                "attachment": self.__cards["cards"][i["id"]]["photo"][f'lvl{i["level"]}'],
+                'level': i['level'],
                 "maxlevel": len(self.__cards["cards"][i["id"]]["photo"]),
+                'raritySymbol': self.__cards['raritySymbols'].get(
+                    str(self.__cards["cards"][i["id"]]["rarity"]),
+                    '⬜'
+                )
             }
             for i in selectedCards
         ]

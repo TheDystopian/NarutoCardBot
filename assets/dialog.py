@@ -1,6 +1,5 @@
 from os.path import dirname, join
-from game.rank import rank
-
+from card_utils import botUtils
 
 class dialog:
     def __init__(self,parent, file = 'dialogs.yaml'):
@@ -17,17 +16,17 @@ class dialog:
     def getStatus(self):
         return self.__messages["status"]
 
-    def getDialogPlain(self, userid: int|str, *, preset = ['error'], text=None, script = None):
-        if not isinstance(preset, list): preset = [preset]
+    def getDialogPlain(self, userid: int|str, *, preset:list|str = ['error'], text: str=None, script:str = ''):
+        if not isinstance(preset, (list,tuple)): preset = [preset]
         
         return {
             'id': userid,
-            'message': [text] if text else 
+            'message': [text] if text is not None else 
             [self.__messages['main'].get(p, 'error').get('message', 'DIALOG_PLACEHOLDER') for p in preset],
-            'keyboard': self.__messages['main'].get(preset[-1], script)
+            'keyboard': self.__messages['main'].get(preset[-1], {}).get('keyboard',script).replace('\\\\', '\\')
         }
         
-    def getDialogParsed(self, receiverID: int|str, preset: str|list = ['error'], *, userdata: dict, selectCard: int|slice =-1):
+    def getDialogParsed(self, receiverID: int|str, preset: str|list = ['error'], *, userdata: dict, selectCard: int|list = None):
         if not isinstance(preset, list): preset = [preset]
 
         return {
@@ -38,10 +37,12 @@ class dialog:
                 .get('message', 'DIALOG_PLACEHOLDER')
                 .format(
                     card = '\n'.join([
-                        card['name'] for card in
+                        botUtils.formatCards(card)
+                        for card in
                         self.__cards.getOwnedCards(
                             userdata.get("cards", [{'id': -1, 'level':1}]),
-                            select = selectCard)
+                            select = selectCard
+                            )
                         ]),
                     status = self.__messages["status"][userdata.get("status", 0)],
                     balance = userdata.get("balance", 0),
